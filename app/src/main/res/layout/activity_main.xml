@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,21 +20,19 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                app:layout_constraintTop_toTopOf="@id/frameLayout"
-                app:layout_constraintLeft_toLeftOf="@id/frameLayout"
-                app:layout_constraintRight_toRightOf="@id/frameLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:id="@+id/cakeImage"
                 android:layout_width="320dp"
                 android:layout_height="320dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
                 android:layout_gravity="center"
-                android:src="@drawable/plaincake"/>
+                android:src="@drawable/plaincakefix"/>
 
             <ImageView
-                app:layout_constraintTop_toTopOf="@id/cakeImage"
-                app:layout_constraintLeft_toLeftOf="@id/cakeImage"
-                app:layout_constraintRight_toRightOf="@id/cakeImage"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_gravity="center"
                 android:layout_marginBottom="54dp"
                 android:layout_width="340dp"
@@ -44,129 +42,76 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/fragmentColours"
+            android:id="@+id/fragmentContainer"
             app:layout_constraintTop_toBottomOf="@id/frameLayout"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/buttonLayout"
+            android:layout_marginBottom="86dp"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
-
-
+            android:layout_height="wrap_content">
         </FrameLayout>
 
-<!--        <ScrollView-->
-<!--            android:id="@+id/horizontalScroll"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/frameLayout"-->
-<!--            app:layout_constraintRight_toRightOf="parent"-->
-<!--            app:layout_constraintLeft_toLeftOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="160dp">-->
+        <LinearLayout
+            android:id="@+id/buttonLayout"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/fragmentContainer">
 
-<!--            <TableLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@id/buttonNext"
+                android:text="back"
+                android:textStyle="bold"
+                android:textSize="16dp"/>
 
-<!--                <TableRow-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center_horizontal">-->
+            <Button
+                android:id="@+id/buttonNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/teal_200"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/buttonBack"
+                android:text="next"
+                android:textStyle="bold"
+                android:textSize="16dp"/>
 
-<!--                    <RadioGroup-->
-<!--                        android:id="@+id/radioGroup1"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginRight="8dp"-->
-<!--                        android:orientation="vertical"-->
-<!--                        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                        app:layout_constraintRight_toRightOf="@id/radioGroup2">-->
+        </LinearLayout>
 
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button1"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:checked="true"-->
-<!--                            android:onClick="buttonClick"-->
-<!--                            android:text="Plain"-->
-<!--                            app:layout_constraintLeft_toLeftOf="@id/radioGroup1"-->
-<!--                            app:layout_constraintRight_toRightOf="@id/button2" />-->
+        <LinearLayout
+            android:id="@+id/buttonLayout2"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/buttonLayout">
 
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button2"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick"-->
-<!--                            android:text="Blue"-->
-<!--                            app:layout_constraintLeft_toLeftOf="@id/button1"-->
-<!--                            app:layout_constraintRight_toRightOf="@id/button2" />-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button3"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick"-->
-<!--                            android:text="Blue"-->
-<!--                            app:layout_constraintLeft_toLeftOf="@id/button1"-->
-<!--                            app:layout_constraintRight_toRightOf="@id/button2" />-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button4"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick"-->
-<!--                            android:text="Blue"-->
-<!--                            app:layout_constraintLeft_toLeftOf="@id/button1"-->
-<!--                            app:layout_constraintRight_toRightOf="@id/button2" />-->
+            <Button
+                android:id="@+id/buttonFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/teal_200"
+                android:text="finish"
+                android:textStyle="bold"
+                android:textSize="16dp"/>
 
 
-<!--                    </RadioGroup>-->
-
-<!--                    <RadioGroup-->
-<!--                        android:id="@+id/radioGroup2"-->
-<!--                        android:layout_marginLeft="8dp"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button5"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick2"-->
-<!--                            android:text="Blue"/>-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button6"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick2"-->
-<!--                            android:text="Blue"/>-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button7"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick2"-->
-<!--                            android:text="Blue"/>-->
-
-<!--                        <RadioButton-->
-<!--                            android:id="@+id/button8"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:onClick="buttonClick2"-->
-<!--                            android:text="Blue"/>-->
-
-<!--                    </RadioGroup>-->
-
-<!--                </TableRow>-->
-
-<!--            </TableLayout>-->
+        </LinearLayout>
 
 
-<!--        </ScrollView>-->
 
 
 
@@ -176,4 +121,4 @@
 
 
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
