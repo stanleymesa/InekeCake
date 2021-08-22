@@ -1,12 +1,12 @@
-package com.example.inekecake
+package com.example.inekecake.Fragments
 
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
+import com.example.inekecake.Activities.MainActivity
+import com.example.inekecake.R
 
 class FragmentNama : Fragment(R.layout.fragment_nama){
 

@@ -1,13 +1,18 @@
-package com.example.inekecake
+package com.example.inekecake.Activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
-import androidx.core.view.marginLeft
-import androidx.fragment.app.FragmentTransaction
+import com.example.inekecake.Fragments.FragmentColours
+import com.example.inekecake.Fragments.FragmentNama
+import com.example.inekecake.Fragments.FragmentTopping
+import com.example.inekecake.R
 
 class MainActivity : AppCompatActivity(),
     FragmentColours.FragmentColoursListener,
@@ -42,6 +47,30 @@ class MainActivity : AppCompatActivity(),
             .replace(R.id.fragmentContainer, fragmentColours)
             .commit()
 
+    }
+
+    // Menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        setMode(item.itemId)
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setMode(selected: Int) {
+        when (selected) {
+            R.id.action_design -> {
+
+            }
+
+            R.id.action_data_customer -> {
+                val intent = Intent(this, CustomersActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     // deklarasi
@@ -84,7 +113,7 @@ class MainActivity : AppCompatActivity(),
                 when (currentPage) {
                     2 -> {
                         supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left)
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragmentContainer, fragmentTopping)
                             .commit()
                         buttonNext.isVisible = true
@@ -94,7 +123,7 @@ class MainActivity : AppCompatActivity(),
 
                     3 -> {
                         supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left)
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragmentContainer, fragmentNama)
                             .commit()
                         buttonNext.setText("finish")

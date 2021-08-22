@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_design"
+        android:title="@string/design_your_cake"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_data_customer"
+        android:title="@string/data_customer"
+        app:showAsAction="never"/>
+
+</menu>
