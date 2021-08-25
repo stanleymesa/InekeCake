@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity(),
     private var currentPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set no dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        // end set
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
