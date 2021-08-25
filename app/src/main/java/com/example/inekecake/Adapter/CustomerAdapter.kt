@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.inekecake.Model.DataModel
 import com.example.inekecake.R
 
-class CustomerAdapter(val list: ArrayList<DataModel>) : RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder>() {
+class CustomerAdapter(val list: ArrayList<DataModel>, val onItemCallback: OnItemCallback) : RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder>() {
 
     inner class CustomerViewHolder(itemView:View): RecyclerView.ViewHolder(itemView) {
         var idCustomer: TextView = itemView.findViewById(R.id.tv_id)
@@ -36,9 +36,17 @@ class CustomerAdapter(val list: ArrayList<DataModel>) : RecyclerView.Adapter<Cus
         holder.hargaCake.text = customer.harga
         holder.tglPesan.text = customer.tglPesan
         holder.tglKirim.text = customer.tglKirim
+
+        holder.itemView.setOnClickListener(){
+            onItemCallback.onItemClicked(customer)
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    interface OnItemCallback{
+        fun onItemClicked(data: DataModel)
     }
 }

@@ -2,11 +2,8 @@ package com.example.inekecake.API
 
 import com.example.inekecake.Model.ResponseModel
 import retrofit2.Call
-import retrofit2.http.GET
 import retrofit2.Retrofit
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface APIRequestData {
     @GET("customers")
@@ -22,6 +19,12 @@ interface APIRequestData {
         @Field("harga") harga: String,
         @Field("tglPesan") tglPesan: String,
         @Field("tglKirim") tglKirim: String,
+    ) : Call<ResponseModel>
+
+    @FormUrlEncoded
+    @POST("customer")
+    fun ardDeleteData(
+        @Field("id") id: Int
     ) : Call<ResponseModel>
 
 

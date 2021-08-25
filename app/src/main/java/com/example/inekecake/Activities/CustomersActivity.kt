@@ -1,5 +1,6 @@
 package com.example.inekecake.Activities
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,13 +22,16 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.security.ProviderInstaller
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.create
 
-class CustomersActivity : AppCompatActivity(), View.OnClickListener {
+class CustomersActivity : AppCompatActivity(),
+    View.OnClickListener,
+    CustomerAdapter.OnItemCallback{
 
     private lateinit var rvCustomers: RecyclerView
     private lateinit var lmCustomers: RecyclerView.LayoutManager
@@ -83,7 +87,7 @@ class CustomersActivity : AppCompatActivity(), View.OnClickListener {
                 listCustomers = response.body()?.data ?: arrayListOf()
 
                 // set adapter
-                rvCustomers.adapter = CustomerAdapter(listCustomers)
+                rvCustomers.adapter = CustomerAdapter(listCustomers, this@CustomersActivity)
 
                 // set srl dan pb hilang
                 srlData.isRefreshing = false
@@ -102,6 +106,23 @@ class CustomersActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
+    private fun deleteData(id: Int) {
+        val ardData: APIRequestData = RetroServer.konekRetrofit().create(APIRequestData::class.java)
+        val hapusData = ardData.ardDeleteData(id)
+
+        hapusData.enqueue(object : Callback<ResponseModel> {
+            override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                val message = response.body()?.message
+                retrieveData()
+                Toast.makeText(this@CustomersActivity, "$message", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                Toast.makeText(this@CustomersActivity, "${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.fab_data -> {
@@ -109,5 +130,40 @@ class CustomersActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onItemClicked(data: DataModel) {
+        val alertDialogBuilder = MaterialAlertDialogBuilder(this)
+        alertDialogBuilder.setTitle("Actions")
+        alertDialogBuilder.setCancelable(true)
+
+        var checkedItem: Int = 0
+
+        alertDialogBuilder.setSingleChoiceItems(arrayOf("Edit", "Hapus"), 0, object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                checkedItem = which
+            }
+        })
+
+        alertDialogBuilder.setNegativeButton("Cancel", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+            }
+        })
+
+        alertDialogBuilder.setPositiveButton("OK", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when(checkedItem) {
+                    0 -> {
+
+                    }
+
+                    1 -> {
+                        deleteData(data.id)
+                    }
+                }
+            }
+
+        })
+        alertDialogBuilder.show()
     }
 }
