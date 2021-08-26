@@ -154,7 +154,9 @@ class CustomersActivity : AppCompatActivity(),
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 when(checkedItem) {
                     0 -> {
-
+                        val intent = Intent(this@CustomersActivity, UpdateDataActivity::class.java)
+                        intent.putExtra("dataEdit", data)
+                        startActivity(intent)
                     }
 
                     1 -> {

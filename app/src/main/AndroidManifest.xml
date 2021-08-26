@@ -13,8 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InekeCake">
         <activity
-            android:name=".Activities.CreateDataActivity"
+            android:name=".Activities.UpdateDataActivity"
             android:parentActivityName=".Activities.CustomersActivity"/>
+        <activity
+            android:name=".Activities.CreateDataActivity"
+            android:parentActivityName=".Activities.CustomersActivity" />
         <activity
             android:name=".Activities.CustomersActivity"
             android:parentActivityName=".Activities.MainActivity" />

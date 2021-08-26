@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.CreateDataActivity">
+    tools:context=".Activities.UpdateDataActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,13 +13,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_title_add"
+            android:id="@+id/tv_title_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/tambah_data_customer"
+            android:text="Edit Data Customer"
             android:textSize="24sp"
             android:textStyle="bold"
             android:fontFamily="casual" />
@@ -33,7 +33,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_nama"
+                android:id="@+id/et_edit_nama"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/nama"/>
@@ -48,7 +48,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_noHp"
+                android:id="@+id/et_edit_noHp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -64,7 +64,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_alamat"
+                android:id="@+id/et_edit_alamat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/alamat"/>
@@ -79,7 +79,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_cake"
+                android:id="@+id/et_edit_cake"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/cake"/>
@@ -94,7 +94,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_harga"
+                android:id="@+id/et_edit_harga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -110,7 +110,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_tglPesan"
+                android:id="@+id/et_edit_tglPesan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
@@ -126,7 +126,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_tglKirim"
+                android:id="@+id/et_edit_tglKirim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
@@ -135,7 +135,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_save"
+            android:id="@+id/btn_edit_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
@@ -143,11 +143,5 @@
 
 
     </LinearLayout>
-
-
-
-
-
-
 
 </ScrollView>

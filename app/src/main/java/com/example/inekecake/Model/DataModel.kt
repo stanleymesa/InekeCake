@@ -1,7 +1,9 @@
 package com.example.inekecake.Model
 
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DataModel(
     var id: Int = 0,
     var nama: String = "",
@@ -11,4 +13,4 @@ data class DataModel(
     var harga: String = "",
     var tglPesan: String = "",
     var tglKirim: String = ""
-)
+) : Parcelable
