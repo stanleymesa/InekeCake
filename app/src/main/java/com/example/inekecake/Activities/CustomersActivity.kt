@@ -18,10 +18,6 @@ import com.example.inekecake.Adapter.CustomerAdapter
 import com.example.inekecake.Model.DataModel
 import com.example.inekecake.Model.ResponseModel
 import com.example.inekecake.R
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.security.ProviderInstaller
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call

@@ -13,4 +13,9 @@
         android:title="@string/data_customer"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_firebase"
+        android:title="@string/firebase"
+        app:showAsAction="never"/>
+
 </menu>

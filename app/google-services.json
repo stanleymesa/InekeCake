@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "873023807599",
+    "project_id": "ineke-cake",
+    "storage_bucket": "ineke-cake.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873023807599:android:1d63e58aa11c9cc8152d9a",
+        "android_client_info": {
+          "package_name": "com.example.inekecake"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873023807599-refiql5dpbg7j4nn0b0gqlovt7cem7uj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlKd9tMWHSFTGEunJuCpEUYUjSw47xjSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873023807599-refiql5dpbg7j4nn0b0gqlovt7cem7uj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
