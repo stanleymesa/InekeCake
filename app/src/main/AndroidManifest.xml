@@ -27,7 +27,9 @@
         <activity
             android:name=".Activities.CustomersActivity"
             android:parentActivityName=".Activities.MainActivity" />
-        <activity android:name=".Activities.SplashActivity">
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
