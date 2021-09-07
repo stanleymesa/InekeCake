@@ -124,7 +124,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_register_at_register"
                 app:cornerRadius="16dp"
-                android:transitionName="login"
+                android:transitionName="button1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -135,13 +135,14 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_login_at_register"
                 app:cornerRadius="16dp"
-                android:transitionName="register"
+                android:transitionName="button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="sudah punya akun? login"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_gravity="right"/>
+
 
         </LinearLayout>
 

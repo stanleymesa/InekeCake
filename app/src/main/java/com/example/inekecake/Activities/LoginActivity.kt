@@ -62,6 +62,7 @@ class LoginActivity : AppCompatActivity(),
             R.id.btn_login_at_login -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
+                finish()
             }
 
             R.id.btn_register_at_login -> {
@@ -70,8 +71,8 @@ class LoginActivity : AppCompatActivity(),
                 pairs.add(android.util.Pair(sloganAtLogin, "slogan"))
                 pairs.add(android.util.Pair(usernameAtLogin, "username"))
                 pairs.add(android.util.Pair(passwordAtLogin, "password"))
-                pairs.add(android.util.Pair(btnLogin, "login"))
-                pairs.add(android.util.Pair(btnRegister, "register"))
+                pairs.add(android.util.Pair(btnLogin, "button1"))
+                pairs.add(android.util.Pair(btnRegister, "button2"))
 
                 val intent = Intent(this, RegisterActivity::class.java)
 
@@ -81,6 +82,7 @@ class LoginActivity : AppCompatActivity(),
                 } else {
                     startActivity(intent)
                 }
+                finish()
             }
         }
     }

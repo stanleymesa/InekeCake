@@ -14,8 +14,7 @@ import android.widget.Toast
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -54,162 +53,191 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         btnLogin = findViewById(R.id.btn_login_at_register)
         btnRegister = findViewById(R.id.btn_register_at_register)
 
+        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        reference = firebaseURL.getReference("users")
+
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
     }
 
-    private fun validateFullName(): Boolean {
+    private fun validateFullName() {
         fullname = fullnameAtRegister.editText?.text.toString().trim()
 
         if (fullname.isEmpty()) {
             fullnameAtRegister.error = "Fullname tidak boleh kosong"
-            return false
         } else {
             fullnameAtRegister.error = null
-            return true
         }
     }
 
-    private fun validateUsername(): Boolean {
+    private fun validateUsername(){
         username = usernameAtRegister.editText?.text.toString()
         val valid = Regex("\\A\\w{4,20}\\z")
 
         if (username.isEmpty()) {
             usernameAtRegister.error = "Username tidak boleh kosong"
-            return false
         }else if (!valid.matches(username)) {
             usernameAtRegister.error = "Username tidak boleh ada spasi"
-            return false
         } else {
-            usernameAtRegister.isErrorEnabled = false
-            return true
-
+            usernameAtRegister.error = null
         }
     }
 
-    private fun validateEmail(): Boolean {
+    private fun validateEmail(isIntent: Boolean) {
         email = emailAtRegister.editText?.text.toString()
         val valid = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 
         if (email.isEmpty()) {
             emailAtRegister.error = "Email tidak boleh kosong"
-            return false
         }else if (!valid.matches(email)) {
             emailAtRegister.error = "Email tidak sesuai (contoh@email.com)"
-            return false
         } else {
-            emailAtRegister.isErrorEnabled = false
-            return true
+            emailAtRegister.error = null
+            val queryEmail: Query = reference.orderByChild("email").equalTo(email)
+            queryEmail.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        emailAtRegister.error = "Email sudah terpakai"
+                    } else {
+                        emailAtRegister.error = null
+                        if (isIntent) {
+                            val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
+                            intent.putExtra("noHp", noHp)
 
+                            val pairs = ArrayList<android.util.Pair<View, String>>()
+                            pairs.add(android.util.Pair(logoAtRegister, "logo"))
+                            pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
+                            pairs.add(android.util.Pair(usernameAtRegister, "username"))
+                            pairs.add(android.util.Pair(passwordAtRegister, "password"))
+                            pairs.add(android.util.Pair(btnRegister, "button1"))
+                            pairs.add(android.util.Pair(btnLogin, "button2"))
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                val options = ActivityOptions.makeSceneTransitionAnimation(
+                                    this@RegisterActivity,
+                                    pairs[0],
+                                    pairs[1],
+                                    pairs[2],
+                                    pairs[3],
+                                    pairs[4],
+                                    pairs[5]
+                                )
+                                startActivity(intent, options.toBundle())
+                            } else {
+                                startActivity(intent)
+                            }
+                            finish()
+                        }
+
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
         }
     }
 
-    private fun validateNoHp(): Boolean {
-        noHp = noHpAtRegister.editText?.text.toString().trim()
-
-        if (noHp.isEmpty()) {
+    private fun validateNoHp() {
+        val noHpAwal = noHpAtRegister.editText?.text.toString().trim()
+        if (noHpAwal.isEmpty()) {
             noHpAtRegister.error = "Nomor handphone tidak boleh kosong"
-            return false
+            allValidation(false)
         } else {
-            noHpAtRegister.error = null
-            return true
+            if (noHpAwal.get(0).toString().equals("0")) {
+                noHp = "+62" + noHpAwal.drop(1)
+            } else {
+                noHp = "+62" + noHpAwal
+            }
+            val query: Query = reference.orderByChild("noHp").equalTo(noHp)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        noHpAtRegister.error = "Nomor Handphone sudah terpakai"
+                        allValidation(false)
+                    } else {
+                        noHpAtRegister.error = null
+                        if (allValidation(false)) {
+                            validateEmail(true)
+                        }
+
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
         }
     }
 
-    private fun validatePassword(): Boolean {
+    private fun validatePassword() {
         password = passwordAtRegister.editText?.text.toString()
-        val valid = Regex(".*[A-Z0-9][A-Z0-9].*")
+        val valid = Regex("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}\$")
 
         if (password.isEmpty()) {
             passwordAtRegister.error = "Password tidak boleh kosong"
-            return false
         }else if (!valid.matches(password)) {
-            passwordAtRegister.error = "Password lemah! (minimal gunakan 1 huruf besar dan angka)"
-            return false
+            passwordAtRegister.error = "Password lemah!\n(minimal 8 karakter, gunakan 1 huruf besar dan angka)"
         } else {
-            passwordAtRegister.isErrorEnabled = false
-            return true
-
+            passwordAtRegister.error = null
         }
     }
 
-    private fun allValidation(): Boolean {
-        var bool = true
-        if (!validateFullName()) {
-            bool = false
+    private fun allValidation(isIntent: Boolean): Boolean {
+        validateFullName()
+        validateUsername()
+        validatePassword()
+        validateEmail(isIntent)
+
+        if (fullnameAtRegister.error != null ||
+            usernameAtRegister.error != null ||
+            passwordAtRegister.error != null){
+
+            return false
         }
-        if (!validateUsername()) {
-            bool = false
-        }
-        if (!validateEmail()) {
-            bool = false
-        }
-        if (!validateNoHp()) {
-            bool = false
-        }
-        if (!validatePassword()) {
-            bool = false
-        }
-        return bool
+        return true
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.btn_login_at_register -> {
                 val pairs = ArrayList<android.util.Pair<View, String>>()
                 pairs.add(android.util.Pair(logoAtRegister, "logo"))
                 pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
                 pairs.add(android.util.Pair(usernameAtRegister, "username"))
                 pairs.add(android.util.Pair(passwordAtRegister, "password"))
-                pairs.add(android.util.Pair(btnLogin, "login"))
-                pairs.add(android.util.Pair(btnRegister, "register"))
+                pairs.add(android.util.Pair(btnRegister, "button1"))
+                pairs.add(android.util.Pair(btnLogin, "button2"))
 
 
                 val intent = Intent(this, LoginActivity::class.java)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val options = ActivityOptions.makeSceneTransitionAnimation(this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
+                    val options = ActivityOptions.makeSceneTransitionAnimation(
+                        this,
+                        pairs[0],
+                        pairs[1],
+                        pairs[2],
+                        pairs[3],
+                        pairs[4],
+                        pairs[5]
+                    )
                     startActivity(intent, options.toBundle())
                 } else {
                     startActivity(intent)
                 }
+                finish()
             }
 
             R.id.btn_register_at_register -> {
-
-                if (!allValidation()) {
-                    return
-                }
-
-                // simpan user ke firebase
-                firebaseURL = Firebase.database("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                reference = firebaseURL.getReference("users")
-                val users = FirebaseModel(fullname, username, email, noHp, password)
-                reference.child(username).setValue(users)
-                Toast.makeText(this, "Akun anda berhasil didaftarkan!", Toast.LENGTH_SHORT).show()
-
-                // set animasi ke login
-                val pairs = ArrayList<android.util.Pair<View, String>>()
-                pairs.add(android.util.Pair(logoAtRegister, "logo"))
-                pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
-                pairs.add(android.util.Pair(usernameAtRegister, "username"))
-                pairs.add(android.util.Pair(passwordAtRegister, "password"))
-                pairs.add(android.util.Pair(btnLogin, "login"))
-                pairs.add(android.util.Pair(btnRegister, "register"))
-
-                val intent = Intent(this, LoginActivity::class.java)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val options = ActivityOptions.makeSceneTransitionAnimation(this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
-                    startActivity(intent, options.toBundle())
-                } else {
-                    startActivity(intent)
-                }
-
-
+                validateNoHp()
             }
         }
     }
+
 
     override fun onBackPressed() {
         val pairs = ArrayList<android.util.Pair<View, String>>()
@@ -228,5 +256,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             startActivity(intent)
         }
+        finish()
     }
 }
