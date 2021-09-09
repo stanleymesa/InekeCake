@@ -1,12 +1,16 @@
 package com.example.inekecake.Activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.chaos.view.PinView
+import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import java.util.concurrent.TimeUnit
 import com.google.android.gms.tasks.TaskExecutors
@@ -20,6 +24,7 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var btnVerify: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var codeBySystem: String
+    private lateinit var pbVerify: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +35,12 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         tvNoHp = findViewById(R.id.tv_noHp_verify)
         pinView = findViewById(R.id.pinView_otp)
         btnVerify = findViewById(R.id.btn_verify)
+        pbVerify = findViewById(R.id.pb_verify)
         btnVerify.setOnClickListener(this)
         auth = FirebaseAuth.getInstance()
 
-        val noHp = intent.getStringExtra("noHp") ?: ""
+        val dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")?.get(0)
+        val noHp = dataUser?.noHp.toString()
         tvNoHp.setText(noHp)
 
         sendOtpCodeToUser(noHp)
@@ -68,7 +75,11 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun onVerificationFailed(p0: FirebaseException) {
+            pbVerify.isVisible = false
             Toast.makeText(this@VerifyOtpActivity, "${p0.message}", Toast.LENGTH_LONG).show()
+            val intent = Intent(this@VerifyOtpActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
     }
@@ -83,10 +94,18 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    pbVerify.isVisible = false
                     Toast.makeText(this, "Verification Complete!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 } else {
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                        pbVerify.isVisible = false
                         Toast.makeText(this, "Verification Failed!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
                 }
             }

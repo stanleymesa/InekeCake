@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="pinkPrimary">#FF4081</color>
     <color name="gray">#FF989395</color>
+    <color name="softPink">#EA82CE</color>
+    <color name="orange">#FAC62A</color>
 </resources>

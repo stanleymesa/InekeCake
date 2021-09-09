@@ -57,7 +57,6 @@ class CustomersActivity : AppCompatActivity(),
         fabData = findViewById(R.id.fab_data)
         fabData.setOnClickListener(this)
 
-
         srlData.setOnRefreshListener {
             retrieveData()
         }

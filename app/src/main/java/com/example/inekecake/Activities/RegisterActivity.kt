@@ -101,8 +101,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         emailAtRegister.error = null
                         if (isIntent) {
+                            val dataUser = ArrayList<FirebaseModel>()
+                            val firebaseModel = FirebaseModel(
+                                fullname, username, email, noHp, password
+                            )
+                            dataUser.add(firebaseModel)
                             val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
-                            intent.putExtra("noHp", noHp)
+                            intent.putExtra("dataUser", dataUser)
 
                             val pairs = ArrayList<android.util.Pair<View, String>>()
                             pairs.add(android.util.Pair(logoAtRegister, "logo"))
