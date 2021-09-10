@@ -94,7 +94,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="4dp">
+                android:layout_marginBottom="4dp"
+                android:transitionName="noHp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"

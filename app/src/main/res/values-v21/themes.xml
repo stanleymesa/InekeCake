@@ -11,7 +11,7 @@
         <item name="colorSecondaryVariant">#EA82CE</item>
         <item name="colorOnSecondary">#FFFFFF</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#F7ECFA</item>
         <!-- Customize your theme here. -->
         <item name="android:windowContentTransitions">true</item>
     </style>

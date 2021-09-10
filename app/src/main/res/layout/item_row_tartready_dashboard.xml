@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="170dp"
+    android:layout_height="165dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginRight="12dp"
+    app:cardCornerRadius="16dp">
+
+    <ImageView
+        android:id="@+id/iv_tartready_dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tr1"
+        android:scaleType="fitXY"/>
+
+</androidx.cardview.widget.CardView>

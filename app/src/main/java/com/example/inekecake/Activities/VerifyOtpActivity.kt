@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import com.chaos.view.PinView
 import com.example.inekecake.Model.FirebaseModel
@@ -27,6 +28,8 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var pbVerify: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set no dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_otp)
         supportActionBar?.hide()

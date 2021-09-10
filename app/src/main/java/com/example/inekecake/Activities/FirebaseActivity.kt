@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
@@ -23,6 +24,8 @@ class FirebaseActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var etFbEmail: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set no dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase)
         supportActionBar?.title = "Firebase"

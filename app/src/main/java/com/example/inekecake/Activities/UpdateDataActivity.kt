@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.API.APIRequestData
 import com.example.inekecake.API.RetroServer
 import com.example.inekecake.Model.DataModel
@@ -36,6 +37,8 @@ class UpdateDataActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tglKirim: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set no dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_data)
         supportActionBar?.title = "Edit Data Customer"

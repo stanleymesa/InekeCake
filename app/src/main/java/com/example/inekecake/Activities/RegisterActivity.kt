@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
@@ -38,6 +39,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var password: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set no dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         supportActionBar?.hide()
@@ -112,7 +115,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             val pairs = ArrayList<android.util.Pair<View, String>>()
                             pairs.add(android.util.Pair(logoAtRegister, "logo"))
                             pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
-                            pairs.add(android.util.Pair(usernameAtRegister, "username"))
+                            pairs.add(android.util.Pair(noHpAtRegister, "noHp"))
                             pairs.add(android.util.Pair(passwordAtRegister, "password"))
                             pairs.add(android.util.Pair(btnRegister, "button1"))
                             pairs.add(android.util.Pair(btnLogin, "button2"))
@@ -212,7 +215,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 val pairs = ArrayList<android.util.Pair<View, String>>()
                 pairs.add(android.util.Pair(logoAtRegister, "logo"))
                 pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
-                pairs.add(android.util.Pair(usernameAtRegister, "username"))
+                pairs.add(android.util.Pair(noHpAtRegister, "noHp"))
                 pairs.add(android.util.Pair(passwordAtRegister, "password"))
                 pairs.add(android.util.Pair(btnRegister, "button1"))
                 pairs.add(android.util.Pair(btnLogin, "button2"))
@@ -248,7 +251,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         val pairs = ArrayList<android.util.Pair<View, String>>()
         pairs.add(android.util.Pair(logoAtRegister, "logo"))
         pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
-        pairs.add(android.util.Pair(usernameAtRegister, "username"))
+        pairs.add(android.util.Pair(noHpAtRegister, "noHp"))
         pairs.add(android.util.Pair(passwordAtRegister, "password"))
         pairs.add(android.util.Pair(btnLogin, "login"))
         pairs.add(android.util.Pair(btnRegister, "register"))
