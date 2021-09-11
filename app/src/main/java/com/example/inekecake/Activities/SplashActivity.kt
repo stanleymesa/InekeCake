@@ -37,17 +37,6 @@ class SplashActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            val fade = Fade()
-//            val decor = window.decorView
-//            val actionBar: View = decor.findViewById(R.id.action_bar_container)
-//            fade.excludeTarget(actionBar, true)
-//            fade.excludeTarget(android.R.id.statusBarBackground, true)
-//            fade.excludeTarget(android.R.id.navigationBarBackground, true)
-//            window.enterTransition = fade
-//            window.exitTransition = fade
-//        }
-
 
         // set no dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
