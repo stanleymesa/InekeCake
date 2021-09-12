@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -26,6 +28,15 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var codeBySystem: String
     private lateinit var pbVerify: ProgressBar
+    private lateinit var firebaseURL: FirebaseDatabase
+    private lateinit var reference: DatabaseReference
+    private lateinit var fullname: String
+    private lateinit var username: String
+    private lateinit var email: String
+    private lateinit var noHp: String
+    private lateinit var password: String
+    private lateinit var fromWhere: String
+    var clickedBack = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
@@ -33,17 +44,30 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_otp)
         supportActionBar?.hide()
-//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         tvNoHp = findViewById(R.id.tv_noHp_verify)
         pinView = findViewById(R.id.pinView_otp)
         btnVerify = findViewById(R.id.btn_verify)
         pbVerify = findViewById(R.id.pb_verify)
         btnVerify.setOnClickListener(this)
-        auth = FirebaseAuth.getInstance()
 
-        val dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")?.get(0)
-        val noHp = dataUser?.noHp.toString()
+        // Set Firebase
+        auth = FirebaseAuth.getInstance()
+        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        reference = firebaseURL.getReference("users")
+
+        fromWhere = intent.getStringExtra("from").toString()
+        // Jika berasal dari register
+        if (fromWhere.equals("register")) {
+            val dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")?.get(0)
+            fullname = dataUser?.fullname.toString()
+            username = dataUser?.username.toString()
+            email = dataUser?.email.toString()
+            noHp = dataUser?.noHp.toString()
+            password = dataUser?.password.toString()
+        } else {        // Jika berasal dari Forgot password
+            noHp = intent.getStringExtra("noHp").toString()
+        }
         tvNoHp.setText(noHp)
 
         sendOtpCodeToUser(noHp)
@@ -98,10 +122,25 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     pbVerify.isVisible = false
-                    Toast.makeText(this, "Verification Complete!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
+
+                    // Save Data User
+                    if (fromWhere.equals("register")) {
+                        val model = FirebaseModel(fullname, username, email, noHp, password)
+                        reference.child(noHp).setValue(model)
+                        Toast.makeText(this, "Verification Complete!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        // End Save Data User
+
+                    } else {
+                        val intent = Intent(this, NewPasswordActivity::class.java)
+                        intent.putExtra("noHp", noHp)
+                        startActivity(intent)
+                        finish()
+                    }
+
+
                 } else {
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         pbVerify.isVisible = false
@@ -122,6 +161,15 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
                     verifyCode(kodeManual)
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        clickedBack++
+        if (clickedBack < 2) {
+            Toast.makeText(this, "Tekan sekali lagi untuk keluar aplikasi", Toast.LENGTH_SHORT).show()
+        } else {
+            finishAffinity()
         }
     }
 }

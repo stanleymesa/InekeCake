@@ -111,6 +111,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             dataUser.add(firebaseModel)
                             val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
                             intent.putExtra("dataUser", dataUser)
+                            intent.putExtra("from", "register")
 
                             val pairs = ArrayList<android.util.Pair<View, String>>()
                             pairs.add(android.util.Pair(logoAtRegister, "logo"))
@@ -202,7 +203,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         if (fullnameAtRegister.error != null ||
             usernameAtRegister.error != null ||
-            passwordAtRegister.error != null){
+            passwordAtRegister.error != null ||
+                emailAtRegister.error != null){
 
             return false
         }

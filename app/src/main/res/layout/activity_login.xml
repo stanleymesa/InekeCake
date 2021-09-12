@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,105 +7,111 @@
     android:layout_height="match_parent"
     tools:context=".Activities.LoginActivity">
 
-    <ImageView
-        android:id="@+id/logo_inekecake_login"
-        android:transitionName="logo"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo_huruf_inekecake"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/slogan_inekecake_login"
-        android:transitionName="slogan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="240dp"
-        android:fontFamily="@font/baumans"
-        android:textStyle="bold"
-        android:text="Selamat Datang di Ineke Cake"
-        android:textSize="26sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/slogan_inekecake_login"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_noHp_login"
-            android:transitionName="noHp"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/logo_inekecake_login"
+            android:transitionName="logo"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginBottom="4dp">
+            android:src="@drawable/logo_huruf_inekecake"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="No. Handphone" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_password_login"
-            android:transitionName="password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_lupa_password"
-            app:cornerRadius="16dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        <TextView
+            android:id="@+id/slogan_inekecake_login"
+            android:transitionName="slogan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="lupa Password?"
-            android:layout_gravity="right"/>
+            android:layout_marginTop="240dp"
+            android:fontFamily="@font/baumans"
+            android:textStyle="bold"
+            android:text="Selamat Datang di Ineke Cake"
+            android:textSize="26sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_login_at_login"
-            app:cornerRadius="16dp"
-            android:transitionName="button1"
+        <LinearLayout
+            app:layout_constraintTop_toBottomOf="@id/slogan_inekecake_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:text="login"/>
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_register_at_login"
-            app:cornerRadius="16dp"
-            android:transitionName="button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="belum punya akun? register"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_gravity="right"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_noHp_login"
+                android:transitionName="noHp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="No. Handphone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_password_login"
+                android:transitionName="password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Password" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_lupa_password"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="lupa Password?"
+                android:layout_gravity="right"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_login_at_login"
+                app:cornerRadius="16dp"
+                android:transitionName="button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="login"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_register_at_login"
+                app:cornerRadius="16dp"
+                android:transitionName="button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="belum punya akun? register"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

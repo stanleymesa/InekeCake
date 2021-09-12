@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var passwordAtLogin: TextInputLayout
     private lateinit var btnRegister: Button
     private lateinit var btnLogin: Button
+    private lateinit var btnForgotPassword: Button
     private lateinit var noHp: String
     private lateinit var password: String
     private lateinit var firebaseURL: FirebaseDatabase
@@ -46,7 +47,6 @@ class LoginActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
         supportActionBar?.hide()
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
@@ -56,12 +56,14 @@ class LoginActivity : AppCompatActivity(),
         passwordAtLogin = findViewById(R.id.et_password_login)
         btnLogin = findViewById(R.id.btn_login_at_login)
         btnRegister = findViewById(R.id.btn_register_at_login)
+        btnForgotPassword = findViewById(R.id.btn_lupa_password)
 
         firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
         reference = firebaseURL.getReference("users")
 
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
+        btnForgotPassword.setOnClickListener(this)
 
     }
 
@@ -79,6 +81,24 @@ class LoginActivity : AppCompatActivity(),
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions.makeSceneTransitionAnimation(
                 this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
+            startActivity(intent, options.toBundle())
+        } else {
+            startActivity(intent)
+        }
+    }
+
+    private fun goToForgotPassword() {
+        var pairs = ArrayList<android.util.Pair<View, String>>()
+        pairs.add(android.util.Pair(logoAtLogin, "logo"))
+        pairs.add(android.util.Pair(sloganAtLogin, "slogan"))
+        pairs.add(android.util.Pair(noHpAtLogin, "noHp"))
+        pairs.add(android.util.Pair(btnLogin, "button1"))
+
+        val intent = Intent(this, ForgotPasswordActivity::class.java)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                this, pairs[0], pairs[1], pairs[2], pairs[3])
             startActivity(intent, options.toBundle())
         } else {
             startActivity(intent)
@@ -141,12 +161,11 @@ class LoginActivity : AppCompatActivity(),
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        Toast.makeText(this@LoginActivity, "NOMOR HP ADA!", Toast.LENGTH_SHORT).show()
                         noHpAtLogin.error = null
 
                         if (validatePassword()) {
 
-                            val passwordFromDB = snapshot.child("stanley").child("password").getValue().toString()
+                            val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
                             if (password.equals(passwordFromDB)) {
                                 Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
@@ -182,6 +201,10 @@ class LoginActivity : AppCompatActivity(),
 
             R.id.btn_register_at_login -> {
                 goToRegister()
+            }
+
+            R.id.btn_lupa_password -> {
+                goToForgotPassword()
             }
         }
     }
