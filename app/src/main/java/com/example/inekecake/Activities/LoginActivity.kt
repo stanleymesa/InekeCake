@@ -18,8 +18,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.getSystemService
 import com.example.inekecake.R
+import com.example.inekecake.Session.SessionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.*
 import okhttp3.internal.cache.DiskLruCache
@@ -32,13 +34,17 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var sloganAtLogin: TextView
     private lateinit var noHpAtLogin: TextInputLayout
     private lateinit var passwordAtLogin: TextInputLayout
+    private lateinit var etNoHpAtLogin: TextInputEditText
+    private lateinit var etPasswordAtLogin: TextInputEditText
     private lateinit var btnRegister: Button
     private lateinit var btnLogin: Button
     private lateinit var btnForgotPassword: Button
+    private lateinit var checkboxRememberMe: CheckBox
     private lateinit var noHp: String
     private lateinit var password: String
     private lateinit var firebaseURL: FirebaseDatabase
     private lateinit var reference: DatabaseReference
+    private lateinit var loginSession: SessionManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +58,14 @@ class LoginActivity : AppCompatActivity(),
 
         logoAtLogin = findViewById(R.id.logo_inekecake_login)
         sloganAtLogin = findViewById(R.id.slogan_inekecake_login)
-        noHpAtLogin = findViewById(R.id.et_noHp_login)
-        passwordAtLogin = findViewById(R.id.et_password_login)
+        noHpAtLogin = findViewById(R.id.ti_noHp_login)
+        passwordAtLogin = findViewById(R.id.ti_password_login)
+        etNoHpAtLogin = findViewById(R.id.et_noHp_login)
+        etPasswordAtLogin = findViewById(R.id.et_password_login)
         btnLogin = findViewById(R.id.btn_login_at_login)
         btnRegister = findViewById(R.id.btn_register_at_login)
         btnForgotPassword = findViewById(R.id.btn_lupa_password)
+        checkboxRememberMe = findViewById(R.id.checkbox_rememberme)
 
         firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
         reference = firebaseURL.getReference("users")
@@ -65,6 +74,21 @@ class LoginActivity : AppCompatActivity(),
         btnRegister.setOnClickListener(this)
         btnForgotPassword.setOnClickListener(this)
 
+        // SET SESSION
+        loginSession = SessionManager(this, SessionManager.LOGIN_SESSION)
+        setEditText()
+
+    }
+
+    private fun setEditText() {
+        if (loginSession.isLoggedIn()) {
+            val dataUser = loginSession.getDataFromLoginSession()
+            val noHp = dataUser.get(SessionManager.KEY_NOHP)
+            val password = dataUser.get(SessionManager.KEY_PASSWORD)
+
+            etNoHpAtLogin.setText(noHp)
+            etPasswordAtLogin.setText(password)
+        }
     }
 
     private fun goToRegister() {
@@ -166,11 +190,14 @@ class LoginActivity : AppCompatActivity(),
                         if (validatePassword()) {
 
                             val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
+
                             if (password.equals(passwordFromDB)) {
+
                                 Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
                                 startActivity(intent)
                                 finish()
+
                             } else {
                                 passwordAtLogin.error = "Password anda salah!"
                             }

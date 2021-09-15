@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity(),
                         buttonNext.isVisible = true
                         buttonBack.isVisible = true
                         buttonFinish.isVisible = false
+
                     }
 
                     3 -> {
