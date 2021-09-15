@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var loginSession: SessionManager
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -79,6 +80,7 @@ class LoginActivity : AppCompatActivity(),
         setEditText()
 
     }
+
 
     private fun setEditText() {
         if (loginSession.isLoggedIn()) {
@@ -192,6 +194,13 @@ class LoginActivity : AppCompatActivity(),
                             val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
 
                             if (password.equals(passwordFromDB)) {
+//                                CREATE SHARED LOGIN
+                                val fullname = snapshot.child(noHp).child("fullname").getValue().toString()
+                                val username = snapshot.child(noHp).child("username").getValue().toString()
+                                val email = snapshot.child(noHp).child("email").getValue().toString()
+                                val noHpToLoginShared = noHp.replace("+62", "0")
+                                val password = snapshot.child(noHp).child("password").getValue().toString()
+                                loginSession.createLogin(fullname, username, email, noHpToLoginShared, password)
 
                                 Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
@@ -215,6 +224,7 @@ class LoginActivity : AppCompatActivity(),
             })
         }
     }
+
 
     override fun onClick(v: View?) {
         when(v?.id) {
