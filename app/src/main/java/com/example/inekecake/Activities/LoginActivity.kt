@@ -24,6 +24,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import okhttp3.internal.cache.DiskLruCache
 
 @Suppress("DEPRECATION")
@@ -45,6 +47,7 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var firebaseURL: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var loginSession: SessionManager
+    private lateinit var rememberMeSession: SessionManager
 
 
 
@@ -77,6 +80,7 @@ class LoginActivity : AppCompatActivity(),
 
         // SET SESSION
         loginSession = SessionManager(this, SessionManager.LOGIN_SESSION)
+        rememberMeSession = SessionManager(this, SessionManager.REMEMBERME_SESSION)
         setEditText()
 
     }
@@ -192,15 +196,20 @@ class LoginActivity : AppCompatActivity(),
                         if (validatePassword()) {
 
                             val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
-
+//                            JIKA PASSWORD SAMA
                             if (password.equals(passwordFromDB)) {
-//                                CREATE SHARED LOGIN
-                                val fullname = snapshot.child(noHp).child("fullname").getValue().toString()
-                                val username = snapshot.child(noHp).child("username").getValue().toString()
-                                val email = snapshot.child(noHp).child("email").getValue().toString()
-                                val noHpToLoginShared = noHp.replace("+62", "0")
-                                val password = snapshot.child(noHp).child("password").getValue().toString()
-                                loginSession.createLogin(fullname, username, email, noHpToLoginShared, password)
+//                                JIKA CHECKBOX REMEMBER TIDAK DICHECK
+                                if (!checkboxRememberMe.isChecked) {
+//                                  CREATE SHARED LOGIN
+                                    val fullname = snapshot.child(noHp).child("fullname").getValue().toString()
+                                    val username = snapshot.child(noHp).child("username").getValue().toString()
+                                    val email = snapshot.child(noHp).child("email").getValue().toString()
+                                    val noHpToLoginShared = noHp.replace("+62", "0")
+                                    val password = snapshot.child(noHp).child("password").getValue().toString()
+                                    loginSession.createLogin(fullname, username, email, noHpToLoginShared, password)
+                                } else {
+                                    rememberMeSession.createRememberMe()
+                                }
 
                                 Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, DashboardActivity::class.java)

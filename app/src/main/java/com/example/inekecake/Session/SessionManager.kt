@@ -66,16 +66,19 @@ class SessionManager(val context: Context, sessionType: String) {
     // REMEMBER ME SHAREDPREFERENCES
 
     fun createRememberMe() {
-        clearRememberMe()
+        editor.clear()
         editor.putBoolean(IS_REMEMBERME, true)
         editor.apply()
     }
 
     fun clearRememberMe() {
         editor.clear()
+        editor.putBoolean(IS_REMEMBERME, false)
+        editor.apply()
     }
 
     fun isRememberedMe(): Boolean {
+
         if (userSession.getBoolean(IS_REMEMBERME, false)) {
             return true
         }

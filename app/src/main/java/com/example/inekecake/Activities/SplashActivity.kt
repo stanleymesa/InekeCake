@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.example.inekecake.R
+import com.example.inekecake.Session.SessionManager
 
 @Suppress("DEPRECATION")
 class SplashActivity() : AppCompatActivity() {
@@ -29,6 +30,7 @@ class SplashActivity() : AppCompatActivity() {
     private lateinit var sloganAnim: Animation
     private lateinit var imgLogo: ImageView
     private lateinit var slogan: TextView
+    private lateinit var rememberMeSession: SessionManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,22 +56,30 @@ class SplashActivity() : AppCompatActivity() {
         imgLogo.animation = logoAnim
         slogan.animation = sloganAnim
 
+        // SET SESSION
+        rememberMeSession = SessionManager(this, SessionManager.REMEMBERME_SESSION)
+
 
         Handler().postDelayed(object : Runnable {
             override fun run() {
 
-                val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+                val intentToLogin = Intent(this@SplashActivity, LoginActivity::class.java)
+                val intentToDashboard = Intent(this@SplashActivity, DashboardActivity::class.java)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val pairs = ArrayList<android.util.Pair<View, String>>()
-                    pairs.add(android.util.Pair(imgLogo, "logo"))
-                    pairs.add(android.util.Pair(slogan, "slogan"))
-                    val options = ActivityOptions.makeSceneTransitionAnimation(this@SplashActivity,pairs[0], pairs[1])
-                    startActivity(intent, options.toBundle())
+                // JIKA ADA REMEMBER ME SESSION
+                if (rememberMeSession.isRememberedMe()) {
+                    startActivity(intentToDashboard)
                 } else {
-                    startActivity(intent)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        val pairs = ArrayList<android.util.Pair<View, String>>()
+                        pairs.add(android.util.Pair(imgLogo, "logo"))
+                        pairs.add(android.util.Pair(slogan, "slogan"))
+                        val options = ActivityOptions.makeSceneTransitionAnimation(this@SplashActivity,pairs[0], pairs[1])
+                        startActivity(intentToLogin, options.toBundle())
+                    } else {
+                        startActivity(intentToLogin)
+                    }
                 }
-
             }
         }, 3000)
 
