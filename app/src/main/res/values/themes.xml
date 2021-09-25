@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.InekeCake" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.InekeCake" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#EA82CE</item>
         <item name="colorPrimaryVariant">#EA82CE</item>
@@ -14,6 +14,14 @@
         <!-- Customize your theme here. -->
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+
+
+    <!--    NAVIGATION DRAWER   -->
+    <style name="NavigationDrawerTheme">
+        <item name="colorPrimary">@color/softOrange</item>
+    </style>
+
 </resources>
 
 <!--<resources>-->

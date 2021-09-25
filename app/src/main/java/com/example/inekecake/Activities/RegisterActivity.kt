@@ -1,10 +1,12 @@
 package com.example.inekecake.Activities
 
 import android.app.ActivityOptions
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -16,27 +18,38 @@ import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.*
+import com.google.firebase.database.Query
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var logoAtRegister: ImageView
     private lateinit var sloganAtRegister: TextView
-    private lateinit var fullnameAtRegister: TextInputLayout
-    private lateinit var usernameAtRegister: TextInputLayout
+    private lateinit var firstnameAtRegister: TextInputLayout
+    private lateinit var lastnameAtRegister: TextInputLayout
     private lateinit var emailAtRegister: TextInputLayout
     private lateinit var noHpAtRegister: TextInputLayout
     private lateinit var passwordAtRegister: TextInputLayout
+    private lateinit var alamatAtRegister: TextInputLayout
+    private lateinit var kotaAtRegister: TextInputLayout
+    private lateinit var kodeposAtRegister: TextInputLayout
     private lateinit var btnRegister: Button
     private lateinit var btnLogin: Button
     private lateinit var firebaseURL: FirebaseDatabase
     private lateinit var reference: DatabaseReference
-    private lateinit var fullname: String
-    private lateinit var username: String
+    private lateinit var firestoreRoot: FirebaseFirestore
+    private lateinit var firstname: String
+    private lateinit var lastname: String
     private lateinit var email: String
     private lateinit var noHp: String
     private lateinit var password: String
+    private lateinit var alamat: String
+    private lateinit var kota: String
+    private lateinit var kodepos: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
@@ -48,41 +61,45 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         logoAtRegister = findViewById(R.id.logo_inekecake_register)
         sloganAtRegister = findViewById(R.id.slogan_inekecake_register)
-        fullnameAtRegister = findViewById(R.id.et_fullname_register)
-        usernameAtRegister = findViewById(R.id.et_username_register)
+        firstnameAtRegister = findViewById(R.id.et_firstname_register)
+        lastnameAtRegister = findViewById(R.id.et_lastname_register)
         emailAtRegister = findViewById(R.id.et_email_register)
         noHpAtRegister = findViewById(R.id.et_noHp_register)
         passwordAtRegister = findViewById(R.id.et_password_register)
+        alamatAtRegister = findViewById(R.id.et_alamat_register)
+        kotaAtRegister = findViewById(R.id.et_kota_register)
+        kodeposAtRegister = findViewById(R.id.et_kodepos_register)
         btnLogin = findViewById(R.id.btn_login_at_register)
         btnRegister = findViewById(R.id.btn_register_at_register)
 
+        // SET FIREBASE
         firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
         reference = firebaseURL.getReference("users")
+        firestoreRoot = Firebase.firestore
+
+        // EMD SET
 
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
     }
 
-    private fun validateFullName() {
-        fullname = fullnameAtRegister.editText?.text.toString().trim()
+    private fun validateFirstname() {
+        firstname = firstnameAtRegister.editText?.text.toString().trim()
 
-        if (fullname.isEmpty()) {
-            fullnameAtRegister.error = "Fullname tidak boleh kosong"
+        if (firstname.isEmpty()) {
+            firstnameAtRegister.error = "First Name tidak boleh kosong"
         } else {
-            fullnameAtRegister.error = null
+            firstnameAtRegister.error = null
         }
     }
 
-    private fun validateUsername(){
-        username = usernameAtRegister.editText?.text.toString()
-        val valid = Regex("\\A\\w{4,20}\\z")
+    private fun validateLastname(){
+        lastname = lastnameAtRegister.editText?.text.toString().trim()
 
-        if (username.isEmpty()) {
-            usernameAtRegister.error = "Username tidak boleh kosong"
-        }else if (!valid.matches(username)) {
-            usernameAtRegister.error = "Username tidak boleh ada spasi"
+        if (lastname.isEmpty()) {
+            lastnameAtRegister.error = "Last Name tidak boleh kosong"
         } else {
-            usernameAtRegister.error = null
+            lastnameAtRegister.error = null
         }
     }
 
@@ -95,18 +112,21 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         }else if (!valid.matches(email)) {
             emailAtRegister.error = "Email tidak sesuai (contoh@email.com)"
         } else {
-            emailAtRegister.error = null
-            val queryEmail: Query = reference.orderByChild("email").equalTo(email)
-            queryEmail.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        emailAtRegister.error = "Email sudah terpakai"
+            val queryEmail = firestoreRoot.collection("users").whereEqualTo("email", email)
+            queryEmail.addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null) {
+                        Log.w(TAG, "Listen Failed", error)
+                    }
+
+                    if (!value!!.isEmpty) {
+                        emailAtRegister.error = "Email telah digunakan"
                     } else {
                         emailAtRegister.error = null
                         if (isIntent) {
                             val dataUser = ArrayList<FirebaseModel>()
                             val firebaseModel = FirebaseModel(
-                                fullname, username, email, noHp, password
+                                firstname, lastname, email, noHp, password
                             )
                             dataUser.add(firebaseModel)
                             val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
@@ -137,12 +157,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             }
                             finish()
                         }
-
                     }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
                 }
 
             })
@@ -153,31 +168,33 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         val noHpAwal = noHpAtRegister.editText?.text.toString().trim()
         if (noHpAwal.isEmpty()) {
             noHpAtRegister.error = "Nomor handphone tidak boleh kosong"
-            allValidation(false)
+            allValidation()
         } else {
             if (noHpAwal.get(0).toString().equals("0")) {
                 noHp = "+62" + noHpAwal.drop(1)
             } else {
                 noHp = "+62" + noHpAwal
             }
-            val query: Query = reference.orderByChild("noHp").equalTo(noHp)
-            query.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        noHpAtRegister.error = "Nomor Handphone sudah terpakai"
-                        allValidation(false)
+            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
+            query.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null) {
+                        Log.w(TAG, "Listen Failed", error)
+                    }
+
+                    if (!value!!.isEmpty) {
+                        noHpAtRegister.error = "Nomor Handphone telah digunakan"
+                        allValidation()
                     } else {
                         noHpAtRegister.error = null
-                        if (allValidation(false)) {
+
+                        if (allValidation()) {
                             validateEmail(true)
                         }
 
                     }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-
-                }
             })
         }
     }
@@ -195,16 +212,52 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun allValidation(isIntent: Boolean): Boolean {
-        validateFullName()
-        validateUsername()
-        validatePassword()
-        validateEmail(isIntent)
+    private fun validateAlamat(){
+        alamat = alamatAtRegister.editText?.text.toString().trim()
 
-        if (fullnameAtRegister.error != null ||
-            usernameAtRegister.error != null ||
+        if (alamat.isEmpty()) {
+            alamatAtRegister.error = "Alamat tidak boleh kosong"
+        } else {
+            alamatAtRegister.error = null
+        }
+    }
+
+    private fun validateKota(){
+        kota = kotaAtRegister.editText?.text.toString().trim()
+
+        if (kota.isEmpty()) {
+            kotaAtRegister.error = "Kota tidak boleh kosong"
+        } else {
+            kotaAtRegister.error = null
+        }
+    }
+
+    private fun validateKodepos(){
+        kodepos = kodeposAtRegister.editText?.text.toString().trim()
+
+        if (kodepos.isEmpty()) {
+            kodeposAtRegister.error = "Kode pos tidak boleh kosong"
+        } else {
+            kodeposAtRegister.error = null
+        }
+    }
+
+    private fun allValidation(): Boolean {
+        validateFirstname()
+        validateLastname()
+        validatePassword()
+        validateEmail(false)
+        validateAlamat()
+        validateKota()
+        validateKodepos()
+
+        if (firstnameAtRegister.error != null ||
+            lastnameAtRegister.error != null ||
             passwordAtRegister.error != null ||
-                emailAtRegister.error != null){
+            emailAtRegister.error != null ||
+            alamatAtRegister.error != null ||
+            kotaAtRegister.error != null ||
+            kodeposAtRegister.error != null){
 
             return false
         }

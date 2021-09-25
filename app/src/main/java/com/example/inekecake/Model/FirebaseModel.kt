@@ -5,9 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FirebaseModel(
-    var fullname: String,
-    var username: String,
-    var email: String,
-    var noHp: String,
-    var password: String
+    var firstname: String = "",
+    var lastname: String = "",
+    var email: String = "",
+    var noHp: String = "",
+    var password: String = ""
 ) : Parcelable

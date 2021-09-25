@@ -60,8 +60,8 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         // Jika berasal dari register
         if (fromWhere.equals("register")) {
             val dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")?.get(0)
-            fullname = dataUser?.fullname.toString()
-            username = dataUser?.username.toString()
+            fullname = dataUser?.firstname.toString()
+            username = dataUser?.lastname.toString()
             email = dataUser?.email.toString()
             noHp = dataUser?.noHp.toString()
             password = dataUser?.password.toString()

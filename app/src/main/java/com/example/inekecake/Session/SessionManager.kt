@@ -79,7 +79,9 @@ class SessionManager(val context: Context, sessionType: String) {
 
     fun isRememberedMe(): Boolean {
 
-        if (userSession.getBoolean(IS_REMEMBERME, false)) {
+        val bool = userSession.getBoolean(IS_REMEMBERME, false)
+
+        if (bool) {
             return true
         }
         return false

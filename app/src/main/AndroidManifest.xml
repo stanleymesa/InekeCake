@@ -14,7 +14,7 @@
         android:theme="@style/Theme.InekeCake">
         <activity android:name=".Activities.NewPasswordActivity"></activity>
         <activity android:name=".Activities.ForgotPasswordActivity" />
-        <activity android:name=".Activities.DashboardActivity" />
+        <activity android:name=".Activities.DashboardActivity"/>
         <activity android:name=".Activities.VerifyOtpActivity" />
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.LoginActivity" />

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.inekecake"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.chaos.view:pinview:1.4.3'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.android.gms:play-services-tasks:17.2.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx:23.0.3'
 
 
     testImplementation 'junit:junit:4.+'

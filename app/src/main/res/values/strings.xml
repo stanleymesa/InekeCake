@@ -7,11 +7,21 @@
     <string name="tambah_data_customer">Tambah Data Customer</string>
     <string name="nama">Nama</string>
     <string name="no_handphone">No. Handphone</string>
-    <string name="alamat">Alamat</string>
     <string name="cake">Cake</string>
     <string name="harga">Harga</string>
     <string name="tanggal_pesan">Tanggal Pesan</string>
     <string name="save">Save</string>
     <string name="tanggal_kirim">Tanggal Kirim</string>
     <string name="firebase">Firebase</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="alamat">Alamat</string>
+    <string name="kota">Kota</string>
+    <string name="kode_pos">Kode Pos</string>
+    <string name="register">Register</string>
+    <string name="sudah_punya_akun_login">sudah punya akun? login</string>
+    <string name="register_dan_pilih_cake_sesuai_selera_anda">Register dan pilih cake sesuai selera anda</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="logo">logo</string>
 </resources>

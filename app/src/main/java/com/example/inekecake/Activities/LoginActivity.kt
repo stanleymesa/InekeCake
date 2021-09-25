@@ -17,6 +17,7 @@ import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.getSystemService
+import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.example.inekecake.Session.SessionManager
 import com.google.android.material.button.MaterialButton
@@ -194,7 +195,6 @@ class LoginActivity : AppCompatActivity(),
                         noHpAtLogin.error = null
 
                         if (validatePassword()) {
-
                             val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
 //                            JIKA PASSWORD SAMA
                             if (password.equals(passwordFromDB)) {
