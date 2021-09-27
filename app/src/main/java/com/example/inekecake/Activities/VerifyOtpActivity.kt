@@ -13,12 +13,17 @@ import androidx.core.view.isVisible
 import com.chaos.view.PinView
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
+import com.google.android.gms.tasks.OnSuccessListener
 import java.util.concurrent.TimeUnit
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -28,13 +33,9 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var codeBySystem: String
     private lateinit var pbVerify: ProgressBar
-    private lateinit var firebaseURL: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
-    private lateinit var fullname: String
-    private lateinit var username: String
-    private lateinit var email: String
+    private lateinit var firestoreRoot: FirebaseFirestore
+    private lateinit var dataUser: FirebaseModel
     private lateinit var noHp: String
-    private lateinit var password: String
     private lateinit var fromWhere: String
     var clickedBack = 0
 
@@ -53,18 +54,16 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
 
         // Set Firebase
         auth = FirebaseAuth.getInstance()
-        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        reference = firebaseURL.getReference("users")
+        firestoreRoot = Firebase.firestore
 
         fromWhere = intent.getStringExtra("from").toString()
+
         // Jika berasal dari register
+
         if (fromWhere.equals("register")) {
-            val dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")?.get(0)
-            fullname = dataUser?.firstname.toString()
-            username = dataUser?.lastname.toString()
-            email = dataUser?.email.toString()
-            noHp = dataUser?.noHp.toString()
-            password = dataUser?.password.toString()
+            dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")!!.get(0)
+            noHp = dataUser.noHp
+
         } else {        // Jika berasal dari Forgot password
             noHp = intent.getStringExtra("noHp").toString()
         }
@@ -91,6 +90,7 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
             super.onCodeSent(p0, p1)
             codeBySystem = p0
+            pbVerify.isVisible = false
         }
 
         override fun onVerificationCompleted(p0: PhoneAuthCredential) {
@@ -121,18 +121,19 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    pbVerify.isVisible = false
 
                     // Save Data User
                     if (fromWhere.equals("register")) {
-                        val model = FirebaseModel(fullname, username, email, noHp, password)
-                        reference.child(noHp).setValue(model)
-                        Toast.makeText(this, "Verification Complete!", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, LoginActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        firestoreRoot.document( "users/$noHp").set(dataUser)
+                            .addOnSuccessListener(this, object : OnSuccessListener<Void>{
+                                override fun onSuccess(p0: Void) {
+                                    Toast.makeText(this@VerifyOtpActivity, "Verification Complete!", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@VerifyOtpActivity, LoginActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            })
                         // End Save Data User
-
                     } else {
                         val intent = Intent(this, NewPasswordActivity::class.java)
                         intent.putExtra("noHp", noHp)

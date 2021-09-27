@@ -9,9 +9,17 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.R
+import com.google.android.gms.tasks.OnCanceledListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -22,6 +30,7 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var confirmNewPassword: String
     private lateinit var firebaseURL: FirebaseDatabase
     private lateinit var reference: DatabaseReference
+    private lateinit var firestoreRoot: FirebaseFirestore
     private lateinit var noHp: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +48,7 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
 
         firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
         reference = firebaseURL.getReference("users")
+        firestoreRoot = Firebase.firestore
 
         noHp = intent.getStringExtra("noHp").toString()
 
@@ -66,7 +76,6 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun validateConfirmNewPassword(): Boolean {
         confirmNewPassword = etConfirmNewPassword.editText?.text.toString()
-        val valid = Regex("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}\$")
 
         if (confirmNewPassword.isEmpty()) {
             etConfirmNewPassword.error = "Confirm Password tidak boleh kosong"
@@ -81,11 +90,12 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
         if (validateNewPassword()) {
             if (validateConfirmNewPassword()) {
                 if (newPassword.equals(confirmNewPassword)) {
-                    reference.child(noHp).child("password").setValue(confirmNewPassword)
-                    Toast.makeText(this, "Password berhasil diperbaharui!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, LoginActivity::class.java)
+                    firestoreRoot.document("users/$noHp").update("password", newPassword)
+                    Toast.makeText(this@NewPasswordActivity, "Password berhasil diperbaharui!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@NewPasswordActivity, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
+
                 } else {
                     etConfirmNewPassword.error = "Konfirmasi password anda berbeda"
                 }

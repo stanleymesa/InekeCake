@@ -26,6 +26,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import okhttp3.internal.cache.DiskLruCache
 
@@ -45,8 +48,7 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var checkboxRememberMe: CheckBox
     private lateinit var noHp: String
     private lateinit var password: String
-    private lateinit var firebaseURL: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
+    private lateinit var firestoreRoot: FirebaseFirestore
     private lateinit var loginSession: SessionManager
     private lateinit var rememberMeSession: SessionManager
 
@@ -72,8 +74,9 @@ class LoginActivity : AppCompatActivity(),
         btnForgotPassword = findViewById(R.id.btn_lupa_password)
         checkboxRememberMe = findViewById(R.id.checkbox_rememberme)
 
-        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        reference = firebaseURL.getReference("users")
+        // SET FIREBASE
+        firestoreRoot = Firebase.firestore
+        // END SET
 
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
@@ -183,53 +186,61 @@ class LoginActivity : AppCompatActivity(),
             noHpAtLogin.error = "Nomor handphone tidak boleh kosong"
             validatePassword()
         } else {
+
             if (noHpAwal.get(0).toString().equals("0")) {
                 noHp = "+62" + noHpAwal.drop(1)
             } else {
                 noHp = "+62" + noHpAwal
             }
-            val query: Query = reference.orderByChild("noHp").equalTo(noHp)
-            query.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        noHpAtLogin.error = null
 
+            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
+            query.addSnapshotListener(this, object : EventListener<QuerySnapshot>{
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null) {
+                        Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                    if (!value!!.isEmpty){
                         if (validatePassword()) {
-                            val passwordFromDB = snapshot.child(noHp).child("password").getValue().toString()
-//                            JIKA PASSWORD SAMA
-                            if (password.equals(passwordFromDB)) {
-//                                JIKA CHECKBOX REMEMBER TIDAK DICHECK
-                                if (!checkboxRememberMe.isChecked) {
-//                                  CREATE SHARED LOGIN
-                                    val fullname = snapshot.child(noHp).child("fullname").getValue().toString()
-                                    val username = snapshot.child(noHp).child("username").getValue().toString()
-                                    val email = snapshot.child(noHp).child("email").getValue().toString()
-                                    val noHpToLoginShared = noHp.replace("+62", "0")
-                                    val password = snapshot.child(noHp).child("password").getValue().toString()
-                                    loginSession.createLogin(fullname, username, email, noHpToLoginShared, password)
-                                } else {
+                            var dataUser = FirebaseModel()
+                            for (snapshot in value){
+                                dataUser = snapshot.toObject()
+                            }
+
+                            if (password.equals(dataUser.password)) {
+                                // SHARED LOGIN
+                                val noHpSharedLogin = dataUser.noHp.replace("+62", "0")
+                                loginSession.createLogin(
+                                    dataUser.firstname,
+                                    dataUser.lastname,
+                                    dataUser.email,
+                                    noHpSharedLogin,
+                                    dataUser.password,
+                                    dataUser.alamat,
+                                    dataUser.kota,
+                                    dataUser.kodepos,
+                                    dataUser.tgl_register
+                                )
+                                if (checkboxRememberMe.isChecked) {
                                     rememberMeSession.createRememberMe()
                                 }
-
                                 Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
                                 startActivity(intent)
                                 finish()
-
                             } else {
                                 passwordAtLogin.error = "Password anda salah!"
                             }
 
                         }
 
-                    } else {
-                        noHpAtLogin.error = "No. Handphone tidak ditemukan!"
+                    } else{
+                        noHpAtLogin.error = "Nomor handphone tidak ditemukan!"
+                        validatePassword()
                     }
+
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
-                }
             })
         }
     }

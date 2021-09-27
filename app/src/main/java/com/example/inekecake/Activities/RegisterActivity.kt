@@ -17,13 +17,18 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.Timestamp
 import com.google.firebase.database.*
 import com.google.firebase.database.Query
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -39,8 +44,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var kodeposAtRegister: TextInputLayout
     private lateinit var btnRegister: Button
     private lateinit var btnLogin: Button
-    private lateinit var firebaseURL: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
     private lateinit var firestoreRoot: FirebaseFirestore
     private lateinit var firstname: String
     private lateinit var lastname: String
@@ -72,11 +75,9 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         btnLogin = findViewById(R.id.btn_login_at_register)
         btnRegister = findViewById(R.id.btn_register_at_register)
 
-        // SET FIREBASE
-        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        reference = firebaseURL.getReference("users")
-        firestoreRoot = Firebase.firestore
 
+        // SET FIREBASE
+        firestoreRoot = Firebase.firestore
         // EMD SET
 
         btnLogin.setOnClickListener(this)
@@ -113,7 +114,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             emailAtRegister.error = "Email tidak sesuai (contoh@email.com)"
         } else {
             val queryEmail = firestoreRoot.collection("users").whereEqualTo("email", email)
-            queryEmail.addSnapshotListener(object : EventListener<QuerySnapshot> {
+            queryEmail.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null) {
                         Log.w(TAG, "Listen Failed", error)
@@ -126,13 +127,14 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                         if (isIntent) {
                             val dataUser = ArrayList<FirebaseModel>()
                             val firebaseModel = FirebaseModel(
-                                firstname, lastname, email, noHp, password
+                                firstname, lastname, email, noHp, password, alamat, kota, kodepos, System.currentTimeMillis().toString()
                             )
                             dataUser.add(firebaseModel)
                             val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
                             intent.putExtra("dataUser", dataUser)
                             intent.putExtra("from", "register")
 
+                            // TRANSITION
                             val pairs = ArrayList<android.util.Pair<View, String>>()
                             pairs.add(android.util.Pair(logoAtRegister, "logo"))
                             pairs.add(android.util.Pair(sloganAtRegister, "slogan"))
