@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -27,21 +28,29 @@ import com.example.inekecake.Model.TartReadyDashModel
 import com.example.inekecake.R
 import com.example.inekecake.Session.SessionManager
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 @Suppress("DEPRECATION")
 class DashboardActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var listDesignDashboard: ArrayList<DesignDashModel>
     private lateinit var listTartReadyDashboard: ArrayList<TartReadyDashModel>
-    private lateinit var listKueMarmerDashboard: ArrayList<KueMarmerModel>
     private lateinit var rvDesign: RecyclerView
     private lateinit var rvTartReady: RecyclerView
     private lateinit var rvKueMarmer: RecyclerView
     private lateinit var btnLogout: Button
+    private lateinit var viewAllTartReady: LinearLayout
+    private lateinit var viewAllKueMarmer: LinearLayout
     private lateinit var rememberMeSession: SessionManager
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var ivMenu: ImageView
+    private lateinit var firestoreRoot: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
@@ -50,15 +59,19 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_dashboard)
         supportActionBar?.hide()
 
+        // SET FIREBASE
+        firestoreRoot = Firebase.firestore
+
         listDesignDashboard = DesignDashData().getList
         listTartReadyDashboard = TartReadyDashData().getList
-        listKueMarmerDashboard = KueMarmerDashData().getList
 
         rvDesign = findViewById(R.id.rv_design_cake)
         rvTartReady = findViewById(R.id.rv_tartReady)
         rvKueMarmer = findViewById(R.id.rv_kueMarmer)
         btnLogout = findViewById(R.id.btn_logout)
         ivMenu = findViewById(R.id.iv_menuBar)
+        viewAllTartReady = findViewById(R.id.layout_viewAllTartReady)
+        viewAllKueMarmer = findViewById(R.id.layout_viewAllKueMarmer)
 
         // DRAWER NAV
         drawerLayout = findViewById(R.id.drawer_layout)
@@ -72,6 +85,9 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
 
         btnLogout.setOnClickListener(this)
         ivMenu.setOnClickListener(this)
+        viewAllKueMarmer.setOnClickListener(this)
+
+
 
         // SET SESSION
         rememberMeSession = SessionManager(this, SessionManager.REMEMBERME_SESSION)
@@ -96,6 +112,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
     private fun showRecyclerDesign() {
         rvDesign.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvDesign.adapter = DesignAdapter(listDesignDashboard)
+
     }
 
     private fun showRecyclerTartReady() {
@@ -105,7 +122,28 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showRecyclerKueMarmer() {
         rvKueMarmer.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvKueMarmer.adapter = KueMarmerAdapter(listKueMarmerDashboard)
+
+        val query = firestoreRoot.collection("kue_marmer")
+        query.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
+            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                if (error != null) {
+                    return
+                }
+
+                if (!value!!.isEmpty) {
+                    val listKueMarmer = arrayListOf<KueMarmerModel>()
+                    for (ds in value) {
+                        listKueMarmer.add(ds.toObject(KueMarmerModel::class.java))
+                    }
+                    rvKueMarmer.adapter = KueMarmerAdapter(listKueMarmer)
+                }
+
+                else {
+                    return
+                }
+            }
+
+        })
     }
 
     override fun onClick(v: View?) {
@@ -118,6 +156,11 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.iv_menuBar -> {
                 drawerLayout.openDrawer(GravityCompat.START)
+            }
+            R.id.layout_viewAllKueMarmer -> {
+                val intent = Intent(this, ViewsAdapterActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }

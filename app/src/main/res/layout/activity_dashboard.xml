@@ -203,25 +203,32 @@
                             android:textSize="26sp"
                             android:layout_marginLeft="8dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_viewAllTart"
+                        <LinearLayout
+                            android:id="@+id/layout_viewAllTartReady"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:orientation="horizontal"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="32dp"
-                            android:text="View All"
-                            android:textSize="16sp"
-                            android:textColor="@color/softPink"
-                            android:fontFamily="@font/baumans"/>
+                            android:gravity="center">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="8dp"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_baseline_chevron_right_pink"/>
+                            <TextView
+                                android:id="@+id/tv_viewAllTart"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="View All"
+                                android:textSize="16sp"
+                                android:textColor="@color/softPink"
+                                android:fontFamily="@font/baumans"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_baseline_chevron_right_pink"/>
+
+                        </LinearLayout>
+
+
 
 
                     </RelativeLayout>
@@ -299,6 +306,7 @@
                             android:text="Hias cake anda sesuai selera sendiri"/>
 
                         <LinearLayout
+                            android:id="@+id/layout_viewAllKueMarmer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="28dp"

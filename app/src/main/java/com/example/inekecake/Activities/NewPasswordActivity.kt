@@ -1,3 +1,4 @@
+
 package com.example.inekecake.Activities
 
 import android.content.Intent
@@ -28,8 +29,6 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var btnSaveNewPassword: Button
     private lateinit var newPassword: String
     private lateinit var confirmNewPassword: String
-    private lateinit var firebaseURL: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
     private lateinit var firestoreRoot: FirebaseFirestore
     private lateinit var noHp: String
 
@@ -46,8 +45,7 @@ class NewPasswordActivity : AppCompatActivity(), View.OnClickListener {
         etConfirmNewPassword = findViewById(R.id.et_confirm_newpassword)
         btnSaveNewPassword = findViewById(R.id.btn_save_newpasword)
 
-        firebaseURL = FirebaseDatabase.getInstance("https://ineke-cake-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        reference = firebaseURL.getReference("users")
+        // SET FIREBASE
         firestoreRoot = Firebase.firestore
 
         noHp = intent.getStringExtra("noHp").toString()

@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class KueMarmerModel(
-    val image: Int,
-    val name: String
+    val url: String = "",
+    val nama: String = "",
+    val harga: String = ""
 ): Parcelable

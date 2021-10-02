@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.inekecake.Model.KueMarmerModel
 import com.example.inekecake.R
 
@@ -23,8 +24,10 @@ class KueMarmerAdapter(val list: ArrayList<KueMarmerModel>): RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: KueMarmerViewHolder, position: Int) {
         val data = list[position]
-        holder.kueMarmerImage.setImageResource(data.image)
-        holder.name.setText(data.name)
+        Glide.with(holder.itemView.context)
+            .load(data.url)
+            .into(holder.kueMarmerImage)
+        holder.name.text = data.nama
     }
 
     override fun getItemCount(): Int {

@@ -24,8 +24,8 @@ class KueMarmerDashData {
         get() {
             val list = arrayListOf<KueMarmerModel>()
             for (i in images.indices) {
-                val model = KueMarmerModel(images[i], name[i])
-                list.add(model)
+//                val model = KueMarmerModel(images[i], name[i])
+//                list.add(model)
             }
             return list
         }
