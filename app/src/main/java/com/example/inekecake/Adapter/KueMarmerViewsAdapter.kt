@@ -9,15 +9,15 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.inekecake.Activities.ViewsAdapterActivity
 import com.example.inekecake.Model.CartModel
 import com.example.inekecake.R
 import com.example.inekecake.Model.KueMarmerModel
-import com.example.inekecake.Session.SessionManager
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
-class KueMarmerViewsAdapter(val list: ArrayList<KueMarmerModel>, val listener: OnKueMarmerClicked ) : RecyclerView.Adapter<KueMarmerViewsAdapter.KueMarmerViewsViewHolder>() {
+class KueMarmerViewsAdapter(options: FirestoreRecyclerOptions<KueMarmerModel>, val listener: OnKueMarmerClicked, val cartList: ArrayList<CartModel>)
+    : FirestoreRecyclerAdapter<KueMarmerModel, KueMarmerViewsAdapter.KueMarmerViewsViewHolder>(options) {
 
-    private lateinit var cartSession: SessionManager
 
     inner class KueMarmerViewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val kueMarmerImage: ImageView = itemView.findViewById(R.id.iv_kuemarmer_views)
@@ -31,32 +31,30 @@ class KueMarmerViewsAdapter(val list: ArrayList<KueMarmerModel>, val listener: O
         return KueMarmerViewsViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: KueMarmerViewsViewHolder, position: Int) {
-        val data = list[position]
+    override fun onBindViewHolder(holder: KueMarmerViewsViewHolder, position: Int, model: KueMarmerModel) {
         Glide.with(holder.itemView.context)
-            .load(data.url)
+            .load(model.url)
             .into(holder.kueMarmerImage)
-        holder.nama.text = data.nama
-        holder.harga.text = data.harga
-        holder.itemView.setOnClickListener { listener.onKueMarmerClicked(data) }
+        holder.nama.text = model.nama
+        holder.harga.text = model.harga
+        holder.itemView.setOnClickListener { listener.onKueMarmerClicked(model) }
 
-        // AMBIL CART DARI SESSION
-        cartSession = SessionManager(holder.itemView.context, SessionManager.CART_SESSION)
-        val cartList = cartSession.getCartSession()
+        // CEK CART
         val cekIdCakeFromCart = arrayListOf<String>()
         for (ds in cartList) {
             cekIdCakeFromCart.add(ds.id)
         }
 
-        holder.isInCartLayout.isVisible = cekIdCakeFromCart.contains(data.id)
-
+        if (cekIdCakeFromCart.contains(model.id)) {
+            holder.isInCartLayout.isVisible = true
+        } else {
+            holder.isInCartLayout.visibility = View.GONE
+        }
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
 
     interface OnKueMarmerClicked {
         fun onKueMarmerClicked(data: KueMarmerModel)
     }
+
 }

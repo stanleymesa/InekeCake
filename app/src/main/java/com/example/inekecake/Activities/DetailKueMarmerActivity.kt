@@ -1,5 +1,6 @@
 package com.example.inekecake.Activities
 
+import android.content.Intent
 import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -138,5 +139,11 @@ class DetailKueMarmerActivity : AppCompatActivity(), View.OnClickListener {
 
     interface GetDataFromDB {
         fun getData(data: KueMarmerModel)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, ViewsAdapterActivity::class.java))
+        finish()
     }
 }

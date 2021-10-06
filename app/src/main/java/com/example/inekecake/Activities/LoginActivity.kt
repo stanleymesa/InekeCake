@@ -16,21 +16,17 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.getSystemService
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.example.inekecake.Session.SessionManager
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import okhttp3.internal.cache.DiskLruCache
 
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),

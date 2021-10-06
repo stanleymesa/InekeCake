@@ -15,12 +15,8 @@ import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.gms.tasks.OnSuccessListener
 import java.util.concurrent.TimeUnit
-import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

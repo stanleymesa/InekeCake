@@ -3,7 +3,6 @@ package com.example.inekecake.Activities
 import android.app.ActivityOptions
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,21 +11,15 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.inekecake.Model.FirebaseModel
 import com.example.inekecake.R
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.Timestamp
 import com.google.firebase.database.*
-import com.google.firebase.database.Query
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 

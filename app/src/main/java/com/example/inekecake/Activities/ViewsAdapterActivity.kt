@@ -14,6 +14,7 @@ import com.example.inekecake.Model.CartModel
 import com.example.inekecake.Model.KueMarmerModel
 import com.example.inekecake.R
 import com.example.inekecake.Session.SessionManager
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -30,6 +31,7 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var loginSession: SessionManager
     private lateinit var cartSession: SessionManager
     private lateinit var userIdSession: String
+    private lateinit var getAdapterListener: GetAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
@@ -50,7 +52,6 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
         cartSession = SessionManager(this, SessionManager.CART_SESSION)
 
         showRecyclerKueMarmer()
-        checkCart()
 
         ivBack.setOnClickListener(this)
 
@@ -59,32 +60,12 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
     private fun showRecyclerKueMarmer() {
         rvActivity.layoutManager = LinearLayoutManager(this)
 
-        firestoreRoot.collection("cakes")
-            .addSnapshotListener(this, object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+        val query = firestoreRoot.collection("cakes")
+        val options = FirestoreRecyclerOptions.Builder<KueMarmerModel>()
+            .setQuery(query, KueMarmerModel::class.java)
+            .build()
 
-                    if (error != null) {
-                        return
-                    }
-
-                    if (!value!!.isEmpty) {
-                        val listKueMarmer = arrayListOf<KueMarmerModel>()
-                        for (ds in value) {
-                            listKueMarmer.add(ds.toObject(KueMarmerModel::class.java))
-                        }
-                        rvActivity.adapter = KueMarmerViewsAdapter(listKueMarmer, this@ViewsAdapterActivity)
-                    }
-
-                    else {
-                        return
-                    }
-
-                }
-
-            })
-    }
-
-    private fun checkCart() {
+        // CEK CART
         firestoreRoot.collection("carts/CART_$userIdSession/items")
             .addSnapshotListener(this, object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
@@ -100,11 +81,51 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
                             cartModel.qty = ds.get("qty").toString()
                             cartList.add(cartModel)
                         }
-                        cartSession.createCartSession(cartList)
+
+                        val adapter = KueMarmerViewsAdapter(options, this@ViewsAdapterActivity, cartList)
+                        rvActivity.adapter = adapter
+
+                        getAdapterListener.getAdapter(adapter)
+
+                    }
+
+                    else {
+                        val cartList = arrayListOf<CartModel>()
+                        val adapter = KueMarmerViewsAdapter(options, this@ViewsAdapterActivity, cartList)
+                        rvActivity.adapter = adapter
+
+                        getAdapterListener.getAdapter(adapter)
                     }
                 }
 
             })
+    }
+
+
+    interface GetAdapter {
+        fun getAdapter(adapter: KueMarmerViewsAdapter)
+    }
+
+    fun setGetAdapterListener(listener: GetAdapter) {
+        this.getAdapterListener = listener
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setGetAdapterListener(object : GetAdapter {
+            override fun getAdapter(adapter: KueMarmerViewsAdapter) {
+                adapter.startListening()
+            }
+        })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        setGetAdapterListener(object : GetAdapter {
+            override fun getAdapter(adapter: KueMarmerViewsAdapter) {
+                adapter.startListening()
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -126,5 +147,6 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
         val intent = Intent(this, DetailKueMarmerActivity::class.java)
         intent.putExtra("clickedKueMarmer", data)
         startActivity(intent)
+        finish()
     }
 }
