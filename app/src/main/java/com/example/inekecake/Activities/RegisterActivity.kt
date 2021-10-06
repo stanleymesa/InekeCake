@@ -143,20 +143,17 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             pairs.add(android.util.Pair(btnRegister, "button1"))
                             pairs.add(android.util.Pair(btnLogin, "button2"))
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                val options = ActivityOptions.makeSceneTransitionAnimation(
-                                    this@RegisterActivity,
-                                    pairs[0],
-                                    pairs[1],
-                                    pairs[2],
-                                    pairs[3],
-                                    pairs[4],
-                                    pairs[5]
-                                )
-                                startActivity(intent, options.toBundle())
-                            } else {
-                                startActivity(intent)
-                            }
+                            val options = ActivityOptions.makeSceneTransitionAnimation(
+                                this@RegisterActivity,
+                                pairs[0],
+                                pairs[1],
+                                pairs[2],
+                                pairs[3],
+                                pairs[4],
+                                pairs[5]
+                            )
+                            startActivity(intent, options.toBundle())
+
                             finish()
                         }
                     }
@@ -177,7 +174,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 noHp = "+62" + noHpAwal
             }
-            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
+            val query = firestoreRoot.collection("users").whereEqualTo(FieldPath.documentId(), noHp)
             query.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null) {
@@ -280,20 +277,17 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
                 val intent = Intent(this, LoginActivity::class.java)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val options = ActivityOptions.makeSceneTransitionAnimation(
-                        this,
-                        pairs[0],
-                        pairs[1],
-                        pairs[2],
-                        pairs[3],
-                        pairs[4],
-                        pairs[5]
-                    )
-                    startActivity(intent, options.toBundle())
-                } else {
-                    startActivity(intent)
-                }
+                val options = ActivityOptions.makeSceneTransitionAnimation(
+                    this,
+                    pairs[0],
+                    pairs[1],
+                    pairs[2],
+                    pairs[3],
+                    pairs[4],
+                    pairs[5]
+                )
+                startActivity(intent, options.toBundle())
+
                 finish()
             }
 
@@ -315,12 +309,9 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         val intent = Intent(this, LoginActivity::class.java)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
-            startActivity(intent, options.toBundle())
-        } else {
-            startActivity(intent)
-        }
+        val options = ActivityOptions.makeSceneTransitionAnimation(this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
+        startActivity(intent, options.toBundle())
+
         finish()
     }
 }

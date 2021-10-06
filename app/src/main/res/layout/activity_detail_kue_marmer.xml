@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.DetailKueMarmerActivity"
+    android:background="@color/statusBarColor"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_topBar_detail_kuemarmer"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <ImageView
+            android:id="@+id/iv_back_detail_kuemarmer"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"/>
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_close_24"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_detail_kuemarmer"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        tools:src="@drawable/keju"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_nama_detail_kuemarmer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_nama_detail_kuemarmer"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            tools:text="Kue Marmer Keju Panggang"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/baumans"/>
+        
+        <TextView
+            android:id="@+id/tv_harga_detail_kuemarmer"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            tools:text="50.000"
+            android:gravity="end"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:layout_centerVertical="true"
+            android:textSize="22sp"
+            android:fontFamily="@font/baumans"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_more_detail_kuemarmer"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_minus_detail_kuemarmer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_remove_circle_outline_24"/>
+
+            <TextView
+                android:id="@+id/tv_jumlahitem_detail_kuemarmer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                tools:text="1"
+                android:fontFamily="@font/baumans"
+                android:textSize="36sp"/>
+
+            <ImageView
+                android:id="@+id/iv_plus_detail_kuemarmer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_add_circle_outline_24"/>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_marginTop="8dp">
+
+        <RelativeLayout
+            android:id="@+id/dummybtn_addtocart_detail_kuemarmer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/round_softpink">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Add To Cart ~ 50.000"
+                android:textColor="@color/white"
+                android:fontFamily="@font/baumans"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"/>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

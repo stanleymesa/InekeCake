@@ -3,6 +3,9 @@ package com.example.inekecake.Session
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.inekecake.Model.CartModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class SessionManager(val context: Context, sessionType: String) {
     private var userSession: SharedPreferences
@@ -12,6 +15,7 @@ class SessionManager(val context: Context, sessionType: String) {
         // Nama Session
         const val LOGIN_SESSION = "loginSession"
         const val REMEMBERME_SESSION = "rememberMeSession"
+        const val CART_SESSION = "cartSession"
 
         // Isi
         private const val IS_LOGGED_IN = "isLoggedIn"
@@ -25,6 +29,7 @@ class SessionManager(val context: Context, sessionType: String) {
         const val KEY_KOTA = "kota"
         const val KEY_KODEPOS = "kodepos"
         const val KEY_TGL_REGISTER = "tgl_register"
+        const val KEY_DATA_CART = "data_cart"
     }
 
     init {
@@ -108,4 +113,23 @@ class SessionManager(val context: Context, sessionType: String) {
         }
         return false
     }
+
+
+    // CART SHAREDPREFERENCES
+
+    fun createCartSession(dataCart: ArrayList<CartModel>) {
+        editor.clear()
+        val gson = Gson()
+        val json = gson.toJson(dataCart)
+        editor.putString(KEY_DATA_CART, json)
+        editor.apply()
+    }
+
+    fun getCartSession(): ArrayList<CartModel> {
+        val gson = Gson()
+        val json = userSession.getString(KEY_DATA_CART, "")
+        val type = object : TypeToken<ArrayList<CartModel>>(){}.type
+        return gson.fromJson(json, type)
+    }
+
 }

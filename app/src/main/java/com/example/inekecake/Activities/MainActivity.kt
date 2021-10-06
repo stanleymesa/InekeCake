@@ -72,11 +72,6 @@ class MainActivity : AppCompatActivity(),
                 val intent = Intent(this, CustomersActivity::class.java)
                 startActivity(intent)
             }
-
-            R.id.action_firebase -> {
-                val intent = Intent(this, FirebaseActivity::class.java)
-                startActivity(intent)
-            }
         }
     }
 

@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity(),
     private fun setEditText() {
         if (loginSession.isLoggedIn()) {
             val dataUser = loginSession.getDataFromLoginSession()
-            val noHp = dataUser.get(SessionManager.KEY_NOHP)
+            val noHp = dataUser.get(SessionManager.KEY_NOHP)!!.replace("+62", "0")
             val password = dataUser.get(SessionManager.KEY_PASSWORD)
 
             etNoHpAtLogin.setText(noHp)
@@ -112,13 +112,10 @@ class LoginActivity : AppCompatActivity(),
 
         val intent = Intent(this, RegisterActivity::class.java)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
-            startActivity(intent, options.toBundle())
-        } else {
-            startActivity(intent)
-        }
+        val options = ActivityOptions.makeSceneTransitionAnimation(
+            this, pairs[0], pairs[1], pairs[2], pairs[3], pairs[4], pairs[5])
+        startActivity(intent, options.toBundle())
+
     }
 
     private fun goToForgotPassword() {
@@ -130,13 +127,10 @@ class LoginActivity : AppCompatActivity(),
 
         val intent = Intent(this, ForgotPasswordActivity::class.java)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                this, pairs[0], pairs[1], pairs[2], pairs[3])
-            startActivity(intent, options.toBundle())
-        } else {
-            startActivity(intent)
-        }
+        val options = ActivityOptions.makeSceneTransitionAnimation(
+            this, pairs[0], pairs[1], pairs[2], pairs[3])
+        startActivity(intent, options.toBundle())
+
     }
 
     private fun isInternetConnected(ctx: LoginActivity): Boolean {
@@ -193,7 +187,7 @@ class LoginActivity : AppCompatActivity(),
                 noHp = "+62" + noHpAwal
             }
 
-            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
+            val query = firestoreRoot.collection("users").whereEqualTo(FieldPath.documentId(), noHp)
             query.addSnapshotListener(this, object : EventListener<QuerySnapshot>{
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null) {
@@ -209,12 +203,11 @@ class LoginActivity : AppCompatActivity(),
 
                             if (password.equals(dataUser.password)) {
                                 // SHARED LOGIN
-                                val noHpSharedLogin = dataUser.noHp.replace("+62", "0")
                                 loginSession.createLogin(
                                     dataUser.firstname,
                                     dataUser.lastname,
                                     dataUser.email,
-                                    noHpSharedLogin,
+                                    dataUser.noHp,
                                     dataUser.password,
                                     dataUser.alamat,
                                     dataUser.kota,

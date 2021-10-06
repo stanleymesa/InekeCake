@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -34,6 +35,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Suppress("DEPRECATION")
 class DashboardActivity : AppCompatActivity(), View.OnClickListener {
@@ -88,7 +92,6 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
         viewAllKueMarmer.setOnClickListener(this)
 
 
-
         // SET SESSION
         rememberMeSession = SessionManager(this, SessionManager.REMEMBERME_SESSION)
 
@@ -123,7 +126,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
     private fun showRecyclerKueMarmer() {
         rvKueMarmer.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        val query = firestoreRoot.collection("kue_marmer")
+        val query = firestoreRoot.collection("kuemarmer_dash")
         query.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null) {

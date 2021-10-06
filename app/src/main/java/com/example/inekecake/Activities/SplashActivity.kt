@@ -70,15 +70,12 @@ class SplashActivity() : AppCompatActivity() {
                 if (rememberMeSession.isRememberedMe()) {
                     startActivity(intentToDashboard)
                 } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        val pairs = ArrayList<android.util.Pair<View, String>>()
-                        pairs.add(android.util.Pair(imgLogo, "logo"))
-                        pairs.add(android.util.Pair(slogan, "slogan"))
-                        val options = ActivityOptions.makeSceneTransitionAnimation(this@SplashActivity,pairs[0], pairs[1])
-                        startActivity(intentToLogin, options.toBundle())
-                    } else {
-                        startActivity(intentToLogin)
-                    }
+                    val pairs = ArrayList<android.util.Pair<View, String>>()
+                    pairs.add(android.util.Pair(imgLogo, "logo"))
+                    pairs.add(android.util.Pair(slogan, "slogan"))
+                    val options = ActivityOptions.makeSceneTransitionAnimation(this@SplashActivity,pairs[0], pairs[1])
+                    startActivity(intentToLogin, options.toBundle())
+
                 }
             }
         }, 3000)

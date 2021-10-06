@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InekeCake">
-        <activity android:name=".Activities.ViewsAdapterActivity"></activity>
+        <activity android:name=".Activities.DetailKueMarmerActivity"></activity>
+        <activity android:name=".Activities.ViewsAdapterActivity" />
         <activity android:name=".Activities.NewPasswordActivity" />
         <activity android:name=".Activities.ForgotPasswordActivity" />
         <activity android:name=".Activities.DashboardActivity" />
