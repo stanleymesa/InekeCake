@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.DetailKueMarmerActivity"
+    tools:context=".activities.DetailKueMarmerActivity"
     android:background="@color/statusBarColor"
     android:orientation="vertical">
 
@@ -83,6 +83,7 @@
         android:background="@color/white">
 
         <LinearLayout
+            android:id="@+id/layout_itemcount_detail_kuemarmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -133,6 +134,7 @@
             android:background="@drawable/round_softpink">
 
             <TextView
+                android:id="@+id/tv_dummybtn_addtocart_detail_kuemarmer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Add To Cart ~ 50.000"

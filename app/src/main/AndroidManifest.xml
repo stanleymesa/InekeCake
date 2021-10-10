@@ -12,29 +12,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InekeCake">
-        <activity android:name=".Activities.DetailKueMarmerActivity"></activity>
-        <activity android:name=".Activities.ViewsAdapterActivity" />
-        <activity android:name=".Activities.NewPasswordActivity" />
-        <activity android:name=".Activities.ForgotPasswordActivity" />
-        <activity android:name=".Activities.DashboardActivity" />
-        <activity android:name=".Activities.VerifyOtpActivity" />
-        <activity android:name=".Activities.RegisterActivity" />
-        <activity android:name=".Activities.LoginActivity" />
-        <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".activities.DetailKueMarmerActivity"></activity>
+        <activity android:name=".activities.ViewsAdapterActivity" />
+        <activity android:name=".activities.NewPasswordActivity" />
+        <activity android:name=".activities.ForgotPasswordActivity" />
+        <activity android:name=".activities.DashboardActivity" />
+        <activity android:name=".activities.VerifyOtpActivity" />
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity
-            android:name=".Activities.FirebaseActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:name=".activities.FirebaseActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".Activities.UpdateDataActivity"
-            android:parentActivityName=".Activities.CustomersActivity" />
+            android:name=".activities.UpdateDataActivity"
+            android:parentActivityName=".activities.CustomersActivity" />
         <activity
-            android:name=".Activities.CreateDataActivity"
-            android:parentActivityName=".Activities.CustomersActivity" />
+            android:name=".activities.CreateDataActivity"
+            android:parentActivityName=".activities.CustomersActivity" />
         <activity
-            android:name=".Activities.CustomersActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:name=".activities.CustomersActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name=".activities.SplashActivity"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

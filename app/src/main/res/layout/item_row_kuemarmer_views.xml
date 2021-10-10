@@ -32,49 +32,49 @@
             tools:src="@drawable/original"
             android:scaleType="fitXY"/>
 
-        <TextView
-            android:id="@+id/tv_kuemarmer_views"
+        <LinearLayout
             app:layout_constraintLeft_toRightOf="@id/iv_kuemarmer_views"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/baumans"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            tools:text="Kue Marmer Original"/>
-
-        <LinearLayout
-            app:layout_constraintTop_toBottomOf="@id/tv_kuemarmer_views"
-            app:layout_constraintLeft_toLeftOf="@id/tv_kuemarmer_views"
-            app:layout_constraintRight_toRightOf="@id/tv_kuemarmer_views"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_rupiah_kuemarmer_views"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_kuemarmer_views"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/baumans"
                 android:textStyle="bold"
-                android:layout_marginEnd="8dp"
                 android:textSize="20sp"
-                android:text="@string/rp"/>
+                tools:text="Kue Marmer Original"/>
+
 
             <TextView
                 android:id="@+id/tv_harga_kuemarmer_views"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/baumans"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 tools:text="45.000"/>
 
+            <TextView
+                android:id="@+id/tv_qty_kuemarmer_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baumans"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="@color/softPink"
+                android:visibility="gone"
+                tools:text="x3"/>
 
         </LinearLayout>
+
+
 
 
 
