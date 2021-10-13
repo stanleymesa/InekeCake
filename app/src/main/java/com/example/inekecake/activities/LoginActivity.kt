@@ -11,17 +11,21 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.inekecake.model.FirebaseModel
+import com.example.inekecake.model.UserModel
 import com.example.inekecake.R
 import com.example.inekecake.session.SessionManager
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),
@@ -40,6 +44,7 @@ class LoginActivity : AppCompatActivity(),
     private lateinit var noHp: String
     private lateinit var password: String
     private lateinit var firestoreRoot: FirebaseFirestore
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var loginSession: SessionManager
     private lateinit var rememberMeSession: SessionManager
 
@@ -67,7 +72,10 @@ class LoginActivity : AppCompatActivity(),
 
         // SET FIREBASE
         firestoreRoot = Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
         // END SET
+
+        Toast.makeText(this, firebaseAuth.currentUser?.uid ?: "null", Toast.LENGTH_SHORT).show()
 
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
@@ -149,6 +157,14 @@ class LoginActivity : AppCompatActivity(),
         alertDialogBuilder.show()
     }
 
+    private fun isAccountChanged(): Boolean {
+        if (firebaseAuth.currentUser!!.phoneNumber.equals(noHp)) {
+            return false
+        }
+        return true
+    }
+
+
     private fun validatePassword(): Boolean {
         password = passwordAtLogin.editText?.text.toString()
         val valid = Regex("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}\$")
@@ -178,40 +194,51 @@ class LoginActivity : AppCompatActivity(),
                 noHp = "+62" + noHpAwal
             }
 
-            val query = firestoreRoot.collection("users").whereEqualTo(FieldPath.documentId(), noHp)
-            query.addSnapshotListener(this, object : EventListener<QuerySnapshot>{
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
+            query.addSnapshotListener(this, EventListener { value, error ->
+
                     if (error != null) {
                         Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
                     }
 
                     if (!value!!.isEmpty){
+                        etNoHpAtLogin.error = null
                         if (validatePassword()) {
-                            var dataUser = FirebaseModel()
+                            var dataUser = UserModel()
                             for (snapshot in value){
-                                dataUser = snapshot.toObject()
+                                dataUser = snapshot.toObject(UserModel::class.java)
                             }
 
+
                             if (password.equals(dataUser.password)) {
-                                // SHARED LOGIN
-                                loginSession.createLogin(
-                                    dataUser.firstname,
-                                    dataUser.lastname,
-                                    dataUser.email,
-                                    dataUser.noHp,
-                                    dataUser.password,
-                                    dataUser.alamat,
-                                    dataUser.kota,
-                                    dataUser.kodepos,
-                                    dataUser.tgl_register
-                                )
-                                if (checkboxRememberMe.isChecked) {
-                                    rememberMeSession.createRememberMe()
+                                // JIKA AKUN GANTI
+                                if (isAccountChanged()) {
+                                    val intent = Intent(this@LoginActivity, VerifyOtpActivity::class.java)
+                                    intent.putExtra("dataUser", dataUser)
+                                    intent.putExtra("from", "loginAccountChanged")
+
+                                    if (checkboxRememberMe.isChecked) {
+                                        intent.putExtra("isRememberMe", true)
+                                    } else {
+                                        intent.putExtra("isRememberMe", false)
+                                    }
+                                    startActivity(intent)
+                                    finish()
                                 }
-                                Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                                startActivity(intent)
-                                finish()
+
+                                else {
+                                    // JIKA AKUN TIDAK GANTI
+                                    if (checkboxRememberMe.isChecked) {
+                                        rememberMeSession.createRememberMe()
+                                    }
+                                    loginSession.createLogin(dataUser)
+                                    Toast.makeText(this@LoginActivity, "Berhasil Log In!", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+
+
                             } else {
                                 passwordAtLogin.error = "Password anda salah!"
                             }
@@ -222,13 +249,11 @@ class LoginActivity : AppCompatActivity(),
                         noHpAtLogin.error = "Nomor handphone tidak ditemukan!"
                         validatePassword()
                     }
-
-                }
-
             })
 
         }
     }
+
 
 
     override fun onClick(v: View?) {
@@ -236,6 +261,7 @@ class LoginActivity : AppCompatActivity(),
             R.id.btn_login_at_login -> {
                 if (isInternetConnected(this)) {
                     validateNoHp()
+
                 } else {
                     alertDialogConnection()
                 }

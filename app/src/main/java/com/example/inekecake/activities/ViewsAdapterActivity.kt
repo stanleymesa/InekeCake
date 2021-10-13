@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import com.example.inekecake.model.KueMarmerModel
 import com.example.inekecake.R
 import com.example.inekecake.session.SessionManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -28,7 +30,6 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var firestoreRoot: FirebaseFirestore
     private lateinit var ivBack: ImageView
     private lateinit var loginSession: SessionManager
-    private lateinit var cartSession: SessionManager
     private lateinit var userIdSession: String
     private lateinit var getAdapterListener: GetAdapter
 
@@ -47,8 +48,6 @@ class ViewsAdapterActivity : AppCompatActivity(), View.OnClickListener,
         // SESSION MANAGER
         loginSession = SessionManager(this, SessionManager.LOGIN_SESSION)
         userIdSession = loginSession.getDataFromLoginSession().get(SessionManager.KEY_NOHP).toString()
-
-        cartSession = SessionManager(this, SessionManager.CART_SESSION)
 
         showRecyclerKueMarmer()
 

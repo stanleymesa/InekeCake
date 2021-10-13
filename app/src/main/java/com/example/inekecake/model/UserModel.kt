@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class FirebaseModel(
+data class UserModel(
     var firstname: String = "",
     var lastname: String = "",
     var email: String = "",

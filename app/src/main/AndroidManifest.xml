@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InekeCake">
-        <activity android:name=".activities.DetailKueMarmerActivity"></activity>
+        <activity android:name=".activities.FirstAuthActivity" />
+        <activity android:name=".activities.DetailKueMarmerActivity" />
         <activity android:name=".activities.ViewsAdapterActivity" />
         <activity android:name=".activities.NewPasswordActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
@@ -21,9 +22,6 @@
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.MainActivity" />
-        <activity
-            android:name=".activities.FirebaseActivity"
-            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.UpdateDataActivity"
             android:parentActivityName=".activities.CustomersActivity" />

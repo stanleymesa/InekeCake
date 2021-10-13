@@ -11,13 +11,18 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.inekecake.model.FirebaseModel
+import com.example.inekecake.model.UserModel
 import com.example.inekecake.R
+import com.example.inekecake.session.SessionManager
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -46,6 +51,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var alamat: String
     private lateinit var kota: String
     private lateinit var kodepos: String
+    private lateinit var userSession: SessionManager
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set no dark mode
@@ -71,10 +78,32 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         // SET FIREBASE
         firestoreRoot = Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
         // EMD SET
+
+        // SET SESSION
+        userSession = SessionManager(this, SessionManager.LOGIN_SESSION)
 
         btnLogin.setOnClickListener(this)
         btnRegister.setOnClickListener(this)
+    }
+
+    private fun saveUserToFirestore(dataUser: UserModel) {
+        firestoreRoot.document("users/${firebaseAuth.currentUser!!.uid}").set(dataUser)
+            .addOnSuccessListener(OnSuccessListener {
+                val intent = Intent(this@RegisterActivity, DashboardActivity::class.java)
+                startActivity(intent)
+                userSession.createLogin(dataUser)
+                Toast.makeText(this, "Berhasil Register!", Toast.LENGTH_SHORT).show()
+                finish()
+            })
+    }
+
+    private fun isSameWithFirstAuth(): Boolean {
+        if (firebaseAuth.currentUser!!.phoneNumber.equals(noHp)) {
+            return true
+        }
+        return false
     }
 
     private fun validateFirstname() {
@@ -118,13 +147,20 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         emailAtRegister.error = null
                         if (isIntent) {
-                            val dataUser = ArrayList<FirebaseModel>()
-                            val firebaseModel = FirebaseModel(
+                            val userModel = UserModel(
                                 firstname, lastname, email, noHp, password, alamat, kota, kodepos, System.currentTimeMillis().toString()
                             )
-                            dataUser.add(firebaseModel)
+
+                            // JIKA PHONE NUMBER SAMA DENGAN AUTH, TIDAK PERLU VERIFY
+                            if (isSameWithFirstAuth()) {
+                                saveUserToFirestore(userModel)
+                                return
+                            }
+
+                            // JIKA PHONE NUMBER BEDA, HARUS VERIFY
+
                             val intent = Intent(this@RegisterActivity, VerifyOtpActivity::class.java)
-                            intent.putExtra("dataUser", dataUser)
+                            intent.putExtra("dataUser", userModel)
                             intent.putExtra("from", "register")
 
                             // TRANSITION
@@ -167,7 +203,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 noHp = "+62" + noHpAwal
             }
-            val query = firestoreRoot.collection("users").whereEqualTo(FieldPath.documentId(), noHp)
+            val query = firestoreRoot.collection("users").whereEqualTo("noHp", noHp)
             query.addSnapshotListener(this, object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null) {

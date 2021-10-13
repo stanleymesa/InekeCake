@@ -11,13 +11,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import com.chaos.view.PinView
-import com.example.inekecake.model.FirebaseModel
+import com.example.inekecake.model.UserModel
 import com.example.inekecake.R
+import com.example.inekecake.session.SessionManager
 import com.google.android.gms.tasks.OnSuccessListener
 import java.util.concurrent.TimeUnit
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -30,9 +32,12 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var codeBySystem: String
     private lateinit var pbVerify: ProgressBar
     private lateinit var firestoreRoot: FirebaseFirestore
-    private lateinit var dataUser: FirebaseModel
+    private lateinit var dataUser: UserModel
     private lateinit var noHp: String
     private lateinit var fromWhere: String
+    private lateinit var userSession: SessionManager
+    private lateinit var rememberMeSession: SessionManager
+    private var isRememberMe = false
     var clickedBack = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,21 +57,36 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
         auth = FirebaseAuth.getInstance()
         firestoreRoot = Firebase.firestore
 
+        // Set Session
+        userSession = SessionManager(this, SessionManager.LOGIN_SESSION)
+        rememberMeSession = SessionManager(this, SessionManager.REMEMBERME_SESSION)
+
+        // Get Intent
         fromWhere = intent.getStringExtra("from").toString()
-
         // Jika berasal dari register
-
         if (fromWhere.equals("register")) {
-            dataUser = intent.getParcelableArrayListExtra<FirebaseModel>("dataUser")!!.get(0)
+            dataUser = intent.getParcelableExtra("dataUser")!!
             noHp = dataUser.noHp
-
-        } else {        // Jika berasal dari Forgot password
+        }
+        // Jika berasal dari Forgot password
+        else if (fromWhere.equals("forgotPassword")) {
             noHp = intent.getStringExtra("noHp").toString()
         }
+        // Jika berasal dari First Auth
+        else if (fromWhere.equals("firstAuth")) {
+            noHp = intent.getStringExtra("noHp").toString()
+        }
+        // Jika berasal dari login account changed
+        else {
+            dataUser = intent.getParcelableExtra("dataUser")!!
+            noHp = dataUser.noHp
+            isRememberMe = intent.getBooleanExtra("isRememberMe", false)
+        }
+
+
         tvNoHp.setText(noHp)
 
         sendOtpCodeToUser(noHp)
-
 
     }
 
@@ -118,24 +138,53 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
 
-                    // Save Data User
+                    // Save Data User (from Register)
                     if (fromWhere.equals("register")) {
-                        firestoreRoot.document( "users/$noHp").set(dataUser)
-                            .addOnSuccessListener(this, object : OnSuccessListener<Void>{
+                        firestoreRoot.document("users/${auth.currentUser!!.uid}").set(dataUser)
+                            .addOnSuccessListener(this, object : OnSuccessListener<Void> {
                                 override fun onSuccess(p0: Void) {
                                     Toast.makeText(this@VerifyOtpActivity, "Verification Complete!", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this@VerifyOtpActivity, LoginActivity::class.java)
+                                    val intent = Intent(this@VerifyOtpActivity, DashboardActivity::class.java)
                                     startActivity(intent)
+
+                                    // Create User Session
+                                    userSession.createLogin(dataUser)
                                     finish()
                                 }
                             })
-                        // End Save Data User
-                    } else {
+                    }
+                    // End Save Data User
+
+                    // To New Password (from Forgot Password)
+                     else if (fromWhere.equals("forgotPassword")) {
                         val intent = Intent(this, NewPasswordActivity::class.java)
                         intent.putExtra("noHp", noHp)
                         startActivity(intent)
                         finish()
                     }
+                    // End To New Password
+
+                    // To Login (First Auth)
+                    else if (fromWhere.equals("firstAuth")) {
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    // End To Login
+
+                    // To Dashboard (Login Account Changed)
+                    else {
+                        val intent = Intent(this, DashboardActivity::class.java)
+                        startActivity(intent)
+                        userSession.createLogin(dataUser)
+
+                        if (isRememberMe) {
+                            rememberMeSession.createRememberMe()
+                        }
+                        finish()
+                    }
+                    // End To Dashboard
+
 
 
                 } else {
