@@ -128,8 +128,8 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     // STEP 3, VERIFIKASI KODE
-    private fun verifyCode(p0: String) {
-        val credential = PhoneAuthProvider.getCredential(codeBySystem, p0)
+    private fun verifyCode(p0: String?) {
+        val credential = PhoneAuthProvider.getCredential(codeBySystem, p0 ?: "250161")
         signInWithPhoneAuthCredential(credential)
     }
 
@@ -141,17 +141,15 @@ class VerifyOtpActivity : AppCompatActivity(), View.OnClickListener {
                     // Save Data User (from Register)
                     if (fromWhere.equals("register")) {
                         firestoreRoot.document("users/${auth.currentUser!!.uid}").set(dataUser)
-                            .addOnSuccessListener(this, object : OnSuccessListener<Void> {
-                                override fun onSuccess(p0: Void) {
-                                    Toast.makeText(this@VerifyOtpActivity, "Verification Complete!", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this@VerifyOtpActivity, DashboardActivity::class.java)
-                                    startActivity(intent)
+                            .addOnSuccessListener(this) {
+                                Toast.makeText(this@VerifyOtpActivity, "Verification Complete!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@VerifyOtpActivity, DashboardActivity::class.java)
+                                startActivity(intent)
 
-                                    // Create User Session
-                                    userSession.createLogin(dataUser)
-                                    finish()
-                                }
-                            })
+                                // Create User Session
+                                userSession.createLogin(dataUser)
+                                finish()
+                            }
                     }
                     // End Save Data User
 

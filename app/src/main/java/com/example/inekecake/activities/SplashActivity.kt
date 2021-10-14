@@ -43,7 +43,6 @@ class SplashActivity() : AppCompatActivity() {
         sloganAnim = AnimationUtils.loadAnimation(this, R.anim.logo_from_left)
 
         // set animasi
-
         imgLogo.animation = logoAnim
         slogan.animation = sloganAnim
 
